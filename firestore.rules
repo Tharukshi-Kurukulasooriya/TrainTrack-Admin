@@ -1,0 +1,23 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Users collection: Allow read & write access for management console and active learners
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+    
+    // Trainings collection and all nested subcollections (trainingModules, trainingReviews, etc.)
+    match /trainings/{trainingId} {
+      allow read, write: if true;
+      
+      match /{document=**} {
+        allow read, write: if true;
+      }
+    }
+
+    // Achievements collection: Allow read & write access for motivational rules and learner badges
+    match /achievements/{achievementId} {
+      allow read, write: if true;
+    }
+  }
+}

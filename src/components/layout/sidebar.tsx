@@ -1,0 +1,123 @@
+import { Link } from "@tanstack/react-router";
+import { NAV_ITEMS } from "@/components/layout/nav";
+import { useAppStore } from "@/lib/data/store";
+import { cn } from "@/lib/utils";
+import { LogOut } from "lucide-react";
+
+function Wordmark() {
+  return (
+    <Link to="/" className="flex items-center gap-3 px-3 py-1">
+      <span className="flex size-9 items-center justify-center rounded-lg bg-accent/15 text-accent">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+          <path
+            d="M334.96 67.31C397.19 60.57 408.94 154.92 346.26 163.74C283.08 172.62 271.14 74.21 334.96 67.31ZM491.81 302.28C492.06 305.96 492.3 309.64 492.54 313.32C492.22 319.3 491.9 325.29 491.57 331.28C486.38 308.09 479.83 288.89 463.64 270.84C450.36 256.02 431.52 246.45 412.54 241.64C361.33 228.66 314.76 256.59 292.01 301.34C287.05 311.09 284.93 323.66 284.19 334.47C280.5 388.96 319.2 437.8 373.4 445.92C387.68 448.05 404.13 446.69 417.82 442.25C423.83 440.29 438.86 431.47 443.15 431.13C442.31 435.06 434.56 438.49 431.65 441.02C420.12 451.01 405.06 456.68 391.01 461.98C336.03 482.74 272.58 462.94 233.34 421.67C225.16 413.07 218.03 402.76 212.41 392.39C209.97 387.89 207.48 377.13 203.59 374.42C203.28 370.47 201.03 366.59 199.95 362.8C197.34 353.61 195.42 343.97 194.5 334.47C193.57 324.95 193.39 314.8 194.69 305.3C195.69 297.96 198.13 290.23 198.17 282.82C200.67 280.45 201.37 273.95 202.4 270.64C205.28 261.47 210.06 251.85 215.15 243.69C217.25 240.32 223.08 234.49 223.29 230.68C226.75 227.89 229.14 223.76 232.13 220.48C239.51 212.41 247.9 204.47 256.99 198.33C267.15 191.48 277.84 185.85 289.08 181.08C293.63 179.16 298.86 178.45 303.17 175.97C323.13 173.89 341.5 169.91 361.87 172.19C411.75 177.79 459.22 212.51 479.24 258.42C485.49 272.76 487.66 287.38 491.81 302.28Z"
+            fill="#fd8a13"
+            fill-rule="evenodd"
+            stroke="#fd8a13"
+            stroke-width="0.25"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M303.17 175.97C298.86 178.45 293.63 179.16 289.08 181.08C277.84 185.85 267.15 191.48 256.99 198.33C247.9 204.47 239.51 212.41 232.13 220.48C229.14 223.76 226.75 227.89 223.29 230.68C163.19 202.03 141.81 132.99 167.9 73.17C172.88 61.76 193.63 31.59 205.81 28.08C204.9 32.55 199.49 38.04 197.06 42.02C190.46 52.78 184.94 67.18 183.79 79.87C182.92 89.39 182.95 99.63 185.02 108.88C193.06 144.87 227.96 165.81 261.61 173.74C275.33 176.97 289.26 176.07 303.17 175.97ZM198.17 282.82C198.13 290.23 195.69 297.96 194.69 305.3C193.39 314.8 193.57 324.95 194.5 334.47C195.42 343.97 197.34 353.61 199.95 362.8C201.03 366.59 203.28 370.47 203.59 374.42C187.07 366.01 171.27 356.63 152.64 353.14C107.53 344.69 58.87 361.24 32.3 400.09C25.53 409.98 18.14 420.29 14.05 431.68C12.4 436.26 9.96 447.2 6.16 450.08C1.18 434.37 11.3 399.71 16.99 384.31C44 311.28 122.13 270.63 198.17 282.82Z"
+            fill="#1cadb3"
+            fill-rule="evenodd"
+            stroke="#1cadb3"
+            stroke-width="0.25"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M491.81 302.28C492.06 305.96 492.3 309.64 492.54 313.32C492.3 309.64 492.06 305.96 491.81 302.28Z"
+            fill="#fffffe"
+            fill-rule="evenodd"
+            stroke="#fffffe"
+            stroke-width="0.25"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+      <span className="flex flex-col leading-none">
+        <span className="font-display text-lg tracking-tight">TrainTrack</span>
+        <span className="mt-1 text-[11px] tracking-[0.18em] text-muted-foreground uppercase">
+          Admin
+        </span>
+      </span>
+    </Link>
+  );
+}
+
+export function Sidebar({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {
+  const connection = useAppStore((s) => s.connection);
+  const live = connection.catalog === "firebase";
+
+  return (
+    <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
+      <div className="px-3 pt-6 pb-4">
+        <Wordmark />
+      </div>
+      <nav className="flex flex-1 flex-col gap-1 px-3">
+        {NAV_ITEMS.map((item) => {
+          const active =
+            item.to === "/"
+              ? pathname === "/"
+              : pathname === item.to || pathname.startsWith(`${item.to}/`);
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.to}
+              to={item.to}
+              onClick={onNavigate}
+              className={cn(
+                "flex h-11 items-center gap-3 rounded-lg px-3 text-sm transition-[background-color,color] duration-150",
+                active
+                  ? "bg-secondary text-foreground"
+                  : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
+              )}
+            >
+              <Icon className="size-4" />
+              {item.label}
+            </Link>
+          );
+        })}
+      </nav>
+      <div className="m-3 flex items-center justify-between rounded-xl border border-sidebar-border/60 bg-card/40 p-3 transition-colors hover:bg-card/70">
+        <div className="flex items-center gap-3 min-w-0">
+          {/* Avatar / Initial Badge */}
+          <div className="relative flex size-8 shrink-0 items-center justify-center rounded-lg bg-accent/10 font-mono text-xs font-semibold text-accent">
+            TK
+            {/* Pulse indicator for Live status */}
+            <span className="absolute -right-0.5 -top-0.5 flex size-2">
+              {live && (
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
+              )}
+              <span
+                className={cn(
+                  "relative inline-flex size-2 rounded-full",
+                  live ? "bg-accent" : "bg-muted-foreground",
+                )}
+              />
+            </span>
+          </div>
+
+          {/* User Details */}
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-xs font-semibold text-foreground">
+              Tharukshi Kurukulasooriya
+            </p>
+            <p className="text-[10px] text-muted-foreground">
+              {live ? "Live catalog" : "Local workspace"}
+            </p>
+          </div>
+        </div>
+
+        {/* Logout Action */}
+        <button
+          type="button"
+          className="ml-2 rounded-lg p-1.5 text-xs text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+          title="Logout"
+        >
+          <LogOut className="size-3.5" />
+        </button>
+      </div>
+    </div>
+  );
+}
