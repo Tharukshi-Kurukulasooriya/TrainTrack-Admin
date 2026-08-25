@@ -79,17 +79,15 @@ function UsersPage() {
           return (
             <Card key={u.uid} className="flex flex-col p-5">
               <div className="flex items-start gap-4">
-                <Avatar className="size-12">
+                <Avatar className="size-18">
                   {u.photoUrl ? <AvatarImage src={u.photoUrl} alt="" /> : null}
-                  <AvatarFallback>{initials(u.username || u.email)}</AvatarFallback>
+                  <AvatarFallback className="text-2xl">
+                    {initials(u.username || u.email)}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="min-w-0 flex-1">
                   <h2 className="truncate font-display text-xl leading-tight">
-                    <Link
-                      to="/users/$id"
-                      params={{ id: u.uid }}
-                      className="hover:underline"
-                    >
+                    <Link to="/users/$id" params={{ id: u.uid }} className="hover:underline">
                       {u.username || "Unnamed learner"}
                     </Link>
                   </h2>
@@ -102,12 +100,7 @@ function UsersPage() {
               </div>
 
               <div className="mt-6 flex gap-2 border-t border-border/60 pt-4">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  asChild
-                  className="flex-1"
-                >
+                <Button size="sm" variant="outline" asChild className="flex-1">
                   <Link to="/users/$id" params={{ id: u.uid }}>
                     View detail
                   </Link>
@@ -148,11 +141,7 @@ function UsersPage() {
         </Card>
       ) : null}
 
-      <LearnerDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        initial={editingUser}
-      />
+      <LearnerDialog open={dialogOpen} onOpenChange={setDialogOpen} initial={editingUser} />
 
       <ConfirmDelete
         open={Boolean(pendingDelete)}
@@ -163,9 +152,7 @@ function UsersPage() {
         description="This removes the learner profile from the console and Firestore database."
         onConfirm={() => {
           if (!pendingDelete) return;
-          void removeUser(pendingDelete).then(() =>
-            toast.success("Learner profile removed."),
-          );
+          void removeUser(pendingDelete).then(() => toast.success("Learner profile removed."));
           setPendingDelete(null);
         }}
       />

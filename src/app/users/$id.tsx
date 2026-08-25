@@ -65,9 +65,9 @@ function UserDetailPage() {
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="p-6">
           <div className="flex flex-col items-center text-center">
-            <Avatar className="size-20">
+            <Avatar className="size-40">
               {user.photoUrl ? <AvatarImage src={user.photoUrl} alt="" /> : null}
-              <AvatarFallback className="text-xl">
+              <AvatarFallback className="text-6xl">
                 {initials(user.username || user.email)}
               </AvatarFallback>
             </Avatar>
