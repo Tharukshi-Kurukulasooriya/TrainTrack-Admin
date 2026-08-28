@@ -110,7 +110,7 @@ function TrainingsPage() {
           return (
             <Card
               key={t.id}
-              className="group flex flex-col overflow-hidden transition-[border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-accent/40"
+              className="group flex flex-col overflow-hidden transition-all duration-600 ease-out hover:-translate-y-1.5 hover:bg-linear-to-b hover:from-card hover:via-card hover:to-accent/10 hover:ring-1 hover:ring-accent/10"
             >
               <div className="relative aspect-video w-full overflow-hidden bg-secondary">
                 {t.trainingImage ? (

@@ -9,14 +9,11 @@ function Progress({
 }: React.ComponentProps<typeof ProgressPrimitive.Root>) {
   return (
     <ProgressPrimitive.Root
-      className={cn(
-        "relative h-1.5 w-full overflow-hidden rounded-full bg-secondary",
-        className,
-      )}
+      className={cn("relative h-1.5 w-full overflow-hidden rounded-full bg-secondary", className)}
       {...props}
     >
       <ProgressPrimitive.Indicator
-        className="h-full w-full flex-1 bg-accent transition-[transform] duration-350 ease-[cubic-bezier(0.22,1,0.36,1)]"
+        className="h-full w-full flex-1 rounded-r-full bg-linear-to-r from-secondary via-accent/40 to-accent transition-all duration-300 ease-in-out"
         style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
       />
     </ProgressPrimitive.Root>

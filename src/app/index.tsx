@@ -185,15 +185,17 @@ function OverviewPage() {
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
-        <Card className="pb-4">
+        <Card className="flex flex-col pb-4">
           <div className="flex items-center justify-between p-5 sm:p-6">
             <h2 className="font-display text-2xl">Needs a look</h2>
             <Sparkles className="size-4 text-accent" />
           </div>
           {stats.attention.length === 0 ? (
-            <p className="mt-4 text-sm text-muted-foreground">
-              The floor is quiet. Nothing is waiting on you.
-            </p>
+            <div className="flex flex-1 items-center justify-center p-6 text-center">
+              <p className="text-sm text-muted-foreground">
+                The floor is quiet. Nothing is waiting on you.
+              </p>
+            </div>
           ) : (
             <ul className="space-y-3 px-2 sm:px-4">
               {stats.attention.map((item) => (
@@ -202,7 +204,7 @@ function OverviewPage() {
                     <Link
                       to="/trainings/$id"
                       params={{ id: item.id }}
-                      className="group flex items-start justify-between gap-3 rounded-xl p-4 transition-[background-color] duration-150 bg-secondary/60 hover:bg-secondary"
+                      className="group flex items-start justify-between gap-3 rounded-xl p-4 transition-[background-color, transform] duration-400 ease-out hover:-translate-y-0.5 bg-secondary/60 hover:bg-secondary"
                     >
                       <span>
                         <span className="block text-sm font-medium">{item.title}</span>
@@ -232,7 +234,7 @@ function OverviewPage() {
           )}
         </Card>
 
-        <Card className="pb-4">
+        <Card className="flex flex-col pb-4">
           <div className="flex items-center justify-between p-5 sm:p-6">
             <h2 className="font-display text-2xl">Latest voice</h2>
             <Button asChild variant="ghost" size="sm">
@@ -240,12 +242,14 @@ function OverviewPage() {
             </Button>
           </div>
           {stats.latest.length === 0 ? (
-            <p className="mt-4 text-sm text-muted-foreground">No reviews in the catalog yet.</p>
+            <div className="flex flex-1 items-center justify-center p-6 text-center">
+              <p className="text-sm text-muted-foreground">No reviews in the catalog yet.</p>
+            </div>
           ) : (
             <ul className="space-y-3 px-2 sm:px-4">
               {stats.latest.map((review) => (
                 <li key={`${review.trainingId}-${review.id}`}>
-                  <div className="rounded-xl p-4 transition-[background-color] duration-150 bg-secondary/60 hover:bg-secondary">
+                  <div className="rounded-xl p-4 transition-[background-color, transform] duration-400 ease-out hover:-translate-y-0.5 bg-secondary/60 hover:bg-secondary">
                     <div className="flex items-center justify-between gap-2">
                       <p className="truncate text-sm font-medium">{review.reviewerName}</p>
                       <Stars value={review.reviewRating} />
@@ -263,7 +267,7 @@ function OverviewPage() {
           )}
         </Card>
 
-        <Card className="p-5 sm:p-6 lg:col-span-2 xl:col-span-1">
+        <Card className="p-3 sm:p-4 lg:col-span-2 xl:col-span-1">
           <div className="flex items-center justify-between">
             <h2 className="font-display text-2xl">Deep work</h2>
             <Button asChild variant="ghost" size="sm">
@@ -279,7 +283,7 @@ function OverviewPage() {
                   <Link
                     to="/users/$id"
                     params={{ id: user.uid }}
-                    className="flex items-center gap-3 rounded-xl px-2 py-2 bg-secondary/60 hover:bg-secondary"
+                    className="flex items-center gap-3 transition-[background-color, transform] duration-400 ease-out hover:-translate-y-0.5 rounded-xl px-2 py-2 bg-secondary/60 hover:bg-secondary"
                   >
                     <Avatar className="size-9">
                       {user.photoUrl ? <AvatarImage src={user.photoUrl} alt="" /> : null}

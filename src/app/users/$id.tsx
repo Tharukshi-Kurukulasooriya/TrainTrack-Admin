@@ -66,7 +66,13 @@ function UserDetailPage() {
         <Card className="p-6">
           <div className="flex flex-col items-center text-center">
             <Avatar className="size-40">
-              {user.photoUrl ? <AvatarImage src={user.photoUrl} alt="" /> : null}
+              {user.photoUrl ? (
+                <AvatarImage
+                  src={user.photoUrl.startsWith("/") ? user.photoUrl : `/${user.photoUrl}`}
+                  alt={user.username || "User avatar"}
+                  className="h-full w-full object-cover"
+                />
+              ) : null}
               <AvatarFallback className="text-6xl">
                 {initials(user.username || user.email)}
               </AvatarFallback>

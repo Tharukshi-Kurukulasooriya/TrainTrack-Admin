@@ -1,13 +1,14 @@
+import { useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import { NAV_ITEMS } from "@/components/layout/nav";
 import { useAppStore } from "@/lib/data/store";
-import { cn } from "@/lib/utils";
+import { cn, formatNumber } from "@/lib/utils";
 import { LogOut } from "lucide-react";
 
 function Wordmark() {
   return (
     <Link to="/" className="flex items-center gap-3 px-3 py-1">
-      <span className="flex size-9 items-center justify-center rounded-lg bg-accent/15 text-accent">
+      <span className="flex size-10 items-center justify-center rounded-lg bg-accent/15 text-accent">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
           <path
             d="M334.96 67.31C397.19 60.57 408.94 154.92 346.26 163.74C283.08 172.62 271.14 74.21 334.96 67.31ZM491.81 302.28C492.06 305.96 492.3 309.64 492.54 313.32C492.22 319.3 491.9 325.29 491.57 331.28C486.38 308.09 479.83 288.89 463.64 270.84C450.36 256.02 431.52 246.45 412.54 241.64C361.33 228.66 314.76 256.59 292.01 301.34C287.05 311.09 284.93 323.66 284.19 334.47C280.5 388.96 319.2 437.8 373.4 445.92C387.68 448.05 404.13 446.69 417.82 442.25C423.83 440.29 438.86 431.47 443.15 431.13C442.31 435.06 434.56 438.49 431.65 441.02C420.12 451.01 405.06 456.68 391.01 461.98C336.03 482.74 272.58 462.94 233.34 421.67C225.16 413.07 218.03 402.76 212.41 392.39C209.97 387.89 207.48 377.13 203.59 374.42C203.28 370.47 201.03 366.59 199.95 362.8C197.34 353.61 195.42 343.97 194.5 334.47C193.57 324.95 193.39 314.8 194.69 305.3C195.69 297.96 198.13 290.23 198.17 282.82C200.67 280.45 201.37 273.95 202.4 270.64C205.28 261.47 210.06 251.85 215.15 243.69C217.25 240.32 223.08 234.49 223.29 230.68C226.75 227.89 229.14 223.76 232.13 220.48C239.51 212.41 247.9 204.47 256.99 198.33C267.15 191.48 277.84 185.85 289.08 181.08C293.63 179.16 298.86 178.45 303.17 175.97C323.13 173.89 341.5 169.91 361.87 172.19C411.75 177.79 459.22 212.51 479.24 258.42C485.49 272.76 487.66 287.38 491.81 302.28Z"
@@ -37,9 +38,7 @@ function Wordmark() {
       </span>
       <span className="flex flex-col leading-none">
         <span className="font-display text-lg tracking-tight">TrainTrack</span>
-        <span className="mt-1 text-[11px] tracking-[0.18em] text-muted-foreground uppercase">
-          Admin
-        </span>
+        <span className="text-[11px] tracking-[0.18em] text-muted-foreground uppercase">Admin</span>
       </span>
     </Link>
   );
@@ -47,7 +46,21 @@ function Wordmark() {
 
 export function Sidebar({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {
   const connection = useAppStore((s) => s.connection);
+  const trainings = useAppStore((s) => s.trainings);
+  const users = useAppStore((s) => s.users);
+  const achievements = useAppStore((s) => s.achievements);
   const live = connection.catalog === "firebase";
+
+  // calculate dynamic count mapping
+  const counts = useMemo(() => {
+    const totalReviews = trainings.reduce((acc, t) => acc + (t.reviews?.length || 0), 0);
+    return {
+      trainings: trainings.length,
+      users: users.length,
+      reviews: totalReviews,
+      achievements: achievements.length,
+    };
+  }, [trainings, users, achievements]);
 
   return (
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
@@ -61,6 +74,8 @@ export function Sidebar({ pathname, onNavigate }: { pathname: string; onNavigate
               ? pathname === "/"
               : pathname === item.to || pathname.startsWith(`${item.to}/`);
           const Icon = item.icon;
+          const count = item.countKey ? counts[item.countKey] : undefined;
+
           return (
             <Link
               key={item.to}
@@ -73,8 +88,24 @@ export function Sidebar({ pathname, onNavigate }: { pathname: string; onNavigate
                   : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
               )}
             >
-              <Icon className="size-4" />
-              {item.label}
+              <span className="flex items-center gap-3 min-w-0">
+                <Icon className="size-4 shrink-0" />
+                <span className="truncate">{item.label}</span>
+              </span>
+
+              {/* counter badge */}
+              {count !== undefined && (
+                <span
+                  className={cn(
+                    "ml-auto font-mono text-xs tabular-nums rounded-md px-1.5 py-0.5 transition-colors",
+                    active
+                      ? "bg-foreground text-background font-semibold"
+                      : "bg-secondary/80 text-muted-foreground group-hover:text-foreground",
+                  )}
+                >
+                  {formatNumber(count)}
+                </span>
+              )}
             </Link>
           );
         })}
