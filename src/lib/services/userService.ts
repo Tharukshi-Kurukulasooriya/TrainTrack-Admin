@@ -62,6 +62,7 @@ function mapUser(uid: string, data: Record<string, unknown>): UserRecord {
     purchasedTrainings: asStringArray(data.purchasedTrainings),
     trainingProgress,
     studyGoalMinutes: asNumber(data.studyGoalMinutes, 15),
+    createdAt: asIso(data.createdAt),
     source: "firebase",
   };
 }
@@ -105,6 +106,7 @@ export async function saveUser(user: UserRecord): Promise<void> {
       purchasedTrainings: user.purchasedTrainings,
       trainingProgress: progress,
       studyGoalMinutes: user.studyGoalMinutes,
+      createdAt: user.createdAt,
     },
     { merge: true },
   );

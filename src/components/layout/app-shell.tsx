@@ -41,7 +41,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </SheetContent>
       </Sheet>
       <div className="lg:pl-60">
-        <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-border bg-background/90 px-4 backdrop-blur-sm sm:px-6">
+        <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur-sm sm:px-6">
           {hydrating || !ready ? (
             <span className="absolute inset-x-0 bottom-0 h-px overflow-hidden">
               <span className="block h-full w-1/3 bg-accent motion-safe:animate-pulse" />
@@ -64,7 +64,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Search className="size-4 shrink-0" />
             <span className="truncate">Search catalog, learners, reviews</span>
             <kbd className="ml-auto hidden rounded border border-border px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground sm:inline">
-              ⌘K
+              ⌘ K
             </kbd>
           </button>
           <Button asChild size="sm" className="shrink-0">

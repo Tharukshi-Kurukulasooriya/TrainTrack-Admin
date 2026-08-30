@@ -97,10 +97,8 @@ export function Sidebar({ pathname, onNavigate }: { pathname: string; onNavigate
               {count !== undefined && (
                 <span
                   className={cn(
-                    "ml-auto font-mono text-xs tabular-nums rounded-md px-1.5 py-0.5 transition-colors",
-                    active
-                      ? "bg-foreground text-background font-semibold"
-                      : "bg-secondary/80 text-muted-foreground group-hover:text-foreground",
+                    "ml-auto font-mono text-xs tabular-nums rounded-md px-1.5 py-0.5 text-muted-foreground transition-colors",
+                    active ? "bg-background" : "bg-secondary/80 ",
                   )}
                 >
                   {formatNumber(count)}

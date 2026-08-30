@@ -25,6 +25,7 @@ function emptyUser(): UserRecord {
     purchasedTrainings: [],
     trainingProgress: {},
     studyGoalMinutes: 15,
+    createdAt: new Date().toISOString(),
     source: "workspace",
   };
 }
@@ -56,6 +57,7 @@ export function LearnerDialog({
       uid,
       username: form.username.trim(),
       email: form.email.trim(),
+      createdAt: form.createdAt || new Date().toISOString(),
     });
     toast.success(isEdit ? "Learner updated." : "Learner added.");
     onOpenChange(false);

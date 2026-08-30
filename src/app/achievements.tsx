@@ -84,7 +84,7 @@ function AchievementsPage() {
   };
 
   return (
-    <div>
+    <div className="hero-wash -m-6 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
       <PageHeader
         eyebrow="Motivation"
         title="Achievements"

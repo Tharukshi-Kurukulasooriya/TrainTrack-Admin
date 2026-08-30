@@ -58,7 +58,7 @@ export const useAppStore = create<AppStore>((set, get) => {
       catalog: "firebase",
       learners: "firebase",
       achievements: "firebase",
-      message: "Connecting to real Firebase database…",
+      message: "Connecting to database…",
     },
     trainings: [],
     users: [],
@@ -91,7 +91,7 @@ export const useAppStore = create<AppStore>((set, get) => {
             catalog: "firebase",
             learners: "firebase",
             achievements: "firebase",
-            message: "Connected to real Firebase database.",
+            message: "Connected to database.",
           },
         });
       } catch (error) {
@@ -103,7 +103,7 @@ export const useAppStore = create<AppStore>((set, get) => {
             catalog: "firebase",
             learners: "firebase",
             achievements: "firebase",
-            message: "Error connecting to Firebase database.",
+            message: "Error connecting to database.",
           },
         });
       }

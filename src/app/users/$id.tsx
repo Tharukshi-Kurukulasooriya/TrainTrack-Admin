@@ -1,5 +1,6 @@
+import { useMemo } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, BookOpen, Clock, Trophy } from "lucide-react";
+import { ArrowLeft, Award, BookOpen, Calendar, Clock, Trophy } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -7,7 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useAppStore } from "@/hooks/useAppStore";
-import { formatHours, formatRelative, initials } from "@/lib/utils";
+import { evaluateAchievement } from "@/lib/achievements";
+import { AchievementIcon } from "@/lib/icons";
+import { formatDate, formatHours, formatRelative, initials } from "@/lib/utils";
 import { PageSkeleton } from "@/components/shared/page-skeleton";
 
 export const Route = createFileRoute("/users/$id")({
@@ -19,6 +22,22 @@ function UserDetailPage() {
   const ready = useAppStore((s) => s.ready);
   const user = useAppStore((s) => s.users.find((u) => u.uid === id));
   const trainings = useAppStore((s) => s.trainings);
+  const achievements = useAppStore((s) => s.achievements);
+
+  const reviews = useMemo(() => trainings.flatMap((t) => t.reviews), [trainings]);
+
+  const userAchievements = useMemo(() => {
+    if (!user) return [];
+    return achievements.map((a) => {
+      const result = evaluateAchievement(a, user, trainings, reviews);
+      return {
+        achievement: a,
+        ...result,
+      };
+    });
+  }, [achievements, user, trainings, reviews]);
+
+  const unlockedCount = userAchievements.filter((a) => a.unlocked).length;
 
   if (!ready) return <PageSkeleton cards={3} />;
 
@@ -103,7 +122,75 @@ function UserDetailPage() {
               </span>
               <span className="font-medium">{user.studyGoalMinutes} mins/day</span>
             </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="flex items-center gap-2 text-muted-foreground">
+                <Calendar className="size-4" />
+                Created at
+              </span>
+              <span className="font-medium">{formatDate(user.createdAt)}</span>
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="flex items-center gap-2 text-muted-foreground">
+                <Award className="size-4" />
+                Achievements
+              </span>
+              <span className="font-medium">
+                {unlockedCount} / {achievements.length} unlocked
+              </span>
+            </div>
           </div>
+
+          {achievements.length > 0 ? (
+            <div className="mt-6 border-t border-border/60 pt-6">
+              <h3 className="font-display text-lg">Achievements details</h3>
+              <ul className="mt-3 space-y-3">
+                {userAchievements.map(({ achievement, unlocked, current, ratio }) => (
+                  <li
+                    key={achievement.id}
+                    className={`rounded-lg border p-3 transition-colors ${
+                      unlocked
+                        ? "border-accent/10 bg-accent/10"
+                        : "border-border/50 bg-secondary/60"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <span
+                          className={`flex size-8 shrink-0 items-center justify-center rounded-lg ${
+                            unlocked ? "bg-accent/20 text-accent" : "bg-muted text-muted-foreground"
+                          }`}
+                        >
+                          <AchievementIcon name={achievement.icon} className="size-4" />
+                        </span>
+                        <div className="truncate">
+                          <p className="text-sm font-medium leading-tight truncate">
+                            {achievement.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground truncate">
+                            {achievement.description}
+                          </p>
+                        </div>
+                      </div>
+                      <Badge variant={unlocked ? "accent" : "outline"} className="shrink-0 text-xs">
+                        {unlocked ? "Unlocked" : `${Math.round(ratio * 100)}%`}
+                      </Badge>
+                    </div>
+                    {!unlocked ? (
+                      <div className="mt-2 space-y-1">
+                        <Progress value={Math.round(ratio * 100)} className="h-1.5 bg-background" />
+                        <div className="flex justify-between text-[11px] text-muted-foreground">
+                          <span>Progress</span>
+                          <span>
+                            {current} / {achievement.threshold}
+                          </span>
+                        </div>
+                      </div>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
         </Card>
 
         <div className="space-y-6 lg:col-span-2">

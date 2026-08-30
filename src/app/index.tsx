@@ -86,16 +86,18 @@ function OverviewPage() {
   });
 
   return (
-    <div className="hero-wash -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+    <div className="hero-wash -m-6 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="text-xs tracking-[0.18em] text-muted-foreground uppercase">{dateLabel}</p>
+          <p className="mt-5 text-xs tracking-[0.18em] text-muted-foreground uppercase">
+            {dateLabel}
+          </p>
           <h1 className="mt-2 font-display text-4xl tracking-tight sm:text-5xl">
             {now ? `${greeting(now)} Tharukshi. ` : null}
           </h1>
           <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
             {formatNumber(trainings.length)} programs, {formatNumber(users.length)} learners, and a
-            house that is still studying.
+            house that is still training.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -119,13 +121,13 @@ function OverviewPage() {
           icon={BookOpen}
         />
         <StatTile
-          label="Learners"
+          label="Employees"
           value={String(users.length)}
           hint={`${formatHours(stats.minutes)} studied`}
           icon={Users}
         />
         <StatTile
-          label="Reviews"
+          label="Feedbacks"
           value={String(stats.reviews)}
           hint={
             stats.rating ? `${stats.rating.toFixed(1)} house average` : "Awaiting a first voice"
@@ -133,7 +135,7 @@ function OverviewPage() {
           icon={MessageSquareQuote}
         />
         <StatTile
-          label="Study time"
+          label="Training Time"
           value={formatHours(stats.minutes)}
           hint="Across every active seat"
           icon={Clock3}
@@ -237,7 +239,7 @@ function OverviewPage() {
         <Card className="flex flex-col pb-4">
           <div className="flex items-center justify-between p-5 sm:p-6">
             <h2 className="font-display text-2xl">Latest voice</h2>
-            <Button asChild variant="ghost" size="sm">
+            <Button asChild variant="secondary" size="sm">
               <Link to="/reviews">All</Link>
             </Button>
           </div>
@@ -270,7 +272,7 @@ function OverviewPage() {
         <Card className="p-3 sm:p-4 lg:col-span-2 xl:col-span-1">
           <div className="flex items-center justify-between">
             <h2 className="font-display text-2xl">Deep work</h2>
-            <Button asChild variant="ghost" size="sm">
+            <Button asChild variant="secondary" size="sm">
               <Link to="/users">Roster</Link>
             </Button>
           </div>

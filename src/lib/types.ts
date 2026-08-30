@@ -56,6 +56,7 @@ export type UserRecord = {
   purchasedTrainings: string[];
   trainingProgress: Record<string, TrainingProgress>;
   studyGoalMinutes: number;
+  createdAt: string;
   source: "firebase" | "workspace";
 };
 

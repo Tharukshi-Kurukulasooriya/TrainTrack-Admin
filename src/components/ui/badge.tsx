@@ -11,8 +11,9 @@ const badgeVariants = cva(
         secondary: "border-transparent bg-secondary text-secondary-foreground",
         outline: "border-border text-foreground",
         accent: "border-transparent bg-accent/20 text-accent",
-        destructive:
-          "border-transparent bg-destructive/15 text-destructive",
+        destructive: "border-transparent bg-destructive/15 text-destructive",
+        premium: "border-amber-500 bg-amber-500/80 text-primary-foreground",
+        free: "border-emerald-500 bg-emerald-500/80 text-primary-foreground",
       },
     },
     defaultVariants: {
@@ -27,11 +28,7 @@ function Badge({
   ...props
 }: React.ComponentProps<"span"> & VariantProps<typeof badgeVariants>) {
   return (
-    <span
-      data-slot="badge"
-      className={cn(badgeVariants({ variant }), className)}
-      {...props}
-    />
+    <span data-slot="badge" className={cn(badgeVariants({ variant }), className)} {...props} />
   );
 }
 

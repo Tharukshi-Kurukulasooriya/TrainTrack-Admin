@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { categoryIcon, TRAINING_CATEGORIES } from "@/lib/categories";
 import { useAppStore } from "@/hooks/useAppStore";
-import { formatCurrency, formatNumber } from "@/lib/utils";
+import { cn, formatCurrency, formatNumber } from "@/lib/utils";
 import { PageSkeleton } from "@/components/shared/page-skeleton";
 
 export const Route = createFileRoute("/trainings/")({
@@ -50,7 +50,7 @@ function TrainingsPage() {
   if (!ready) return <PageSkeleton cards={6} />;
 
   return (
-    <div>
+    <div className="hero-wash -m-6 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
       <PageHeader
         eyebrow="Catalog"
         title="Training programs"
@@ -110,14 +110,19 @@ function TrainingsPage() {
           return (
             <Card
               key={t.id}
-              className="group flex flex-col overflow-hidden transition-all duration-600 ease-out hover:-translate-y-1.5 hover:bg-linear-to-b hover:from-card hover:via-card hover:to-accent/10 hover:ring-1 hover:ring-accent/10"
+              className={cn(
+                "group flex flex-col overflow-hidden transition-all duration-500 ease-out hover:-translate-y-1.5",
+                t.trainingIsPremium
+                  ? "bg-linear-to-b from-card via-card to-warning/20 border-warning/20 hover:border-warning hover:to-warning/30"
+                  : "bg-card hover:bg-linear-to-b hover:from-card hover:via-card hover:to-accent/10 hover:ring-1 hover:ring-accent/10",
+              )}
             >
               <div className="relative aspect-video w-full overflow-hidden bg-secondary">
                 {t.trainingImage ? (
                   <img
                     src={t.trainingImage}
                     alt=""
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-600 group-hover:scale-102"
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center text-muted-foreground">
@@ -129,9 +134,9 @@ function TrainingsPage() {
                     <Icon className="mr-1 size-3 text-accent" />
                     {t.trainingCategory || "General"}
                   </Badge>
-                  {t.trainingIsPremium ? (
-                    <Badge variant="accent">{formatCurrency(t.trainingFee)}</Badge>
-                  ) : null}
+                  <Badge variant={t.trainingIsPremium ? "premium" : "free"} className="font-bold">
+                    {t.trainingIsPremium ? formatCurrency(t.trainingFee) : "Free"}
+                  </Badge>
                 </div>
               </div>
 
