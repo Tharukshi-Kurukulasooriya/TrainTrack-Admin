@@ -68,7 +68,7 @@ function AdminsPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingAdmin, setEditingAdmin] = useState<AdminRecord | null>(null);
 
-  // Form State
+  // form state
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -248,7 +248,7 @@ function AdminsPage() {
       <PageHeader
         eyebrow="Access Control & Governance"
         title="Admin Accounts & Roles"
-        description="Manage real administrator accounts, assign profile avatars, granular role permissions, and security access."
+        description="Manage administrator accounts, granular role permissions, and security access."
         actions={
           <Button onClick={openCreateDialog} className="gap-2">
             <UserPlus className="size-4" />
@@ -260,7 +260,7 @@ function AdminsPage() {
       {/* stat cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card className="p-4 flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+          <div className="flex size-10 items-center justify-center rounded-md bg-accent/10 text-accent">
             <UserCog className="size-5" />
           </div>
           <div>
@@ -270,7 +270,7 @@ function AdminsPage() {
         </Card>
 
         <Card className="p-4 flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+          <div className="flex size-10 items-center justify-center rounded-md bg-accent/10 text-accent">
             <ShieldCheck className="size-5" />
           </div>
           <div>
@@ -280,7 +280,7 @@ function AdminsPage() {
         </Card>
 
         <Card className="p-4 flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+          <div className="flex size-10 items-center justify-center rounded-md bg-accent/10 text-accent">
             <UserCheck className="size-5" />
           </div>
           <div>
@@ -290,7 +290,7 @@ function AdminsPage() {
         </Card>
 
         <Card className="p-4 flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+          <div className="flex size-10 items-center justify-center rounded-md bg-accent/10 text-accent">
             <Activity className="size-5" />
           </div>
           <div>
@@ -339,7 +339,7 @@ function AdminsPage() {
               className="p-5 flex flex-col justify-between relative overflow-visible"
             >
               {isCurrent ? (
-                <span className="absolute -top-2 -right-2 z-10 flex items-center justify-center rounded-full bg-card px-4 py-1 font-mono text-[12px] font-extrabold text-secondary-foreground ring-2 ring-background uppercase tracking-wider">
+                <span className="absolute -top-2 -right-2 z-10 flex items-center justify-center rounded-md bg-card px-4 py-1 font-mono text-[12px] font-extrabold text-secondary-foreground ring-2 ring-background uppercase tracking-wider">
                   you
                 </span>
               ) : null}
@@ -464,9 +464,8 @@ function AdminsPage() {
 
             <div className="space-y-4 py-4">
               {/* profile avatar selection */}
-              <div className="space-y-3 rounded-xl border border-border/80 bg-secondary/30 p-4">
-                <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                  <ImageIcon className="size-3.5 text-accent" />
+              <div className="space-y-3 rounded-lg border border-border/80 bg-secondary/30 p-4">
+                <Label className="text-xs font-semibold tracking-wider text-muted-foreground flex items-center gap-1.5">
                   Admin Profile Picture
                 </Label>
 
@@ -480,7 +479,7 @@ function AdminsPage() {
 
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center gap-2">
-                      <label className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3 py-1.5 text-xs font-semibold text-accent-foreground shadow-sm hover:bg-accent/90 cursor-pointer transition-all">
+                      <label className="inline-flex items-center gap-1.5 rounded-md bg-accent/80 px-3 py-1.5 text-xs font-semibold text-accent-foreground shadow-sm hover:bg-accent/90 cursor-pointer transition-all">
                         <Upload className="size-3.5" />
                         Choose File
                         <input
@@ -499,7 +498,7 @@ function AdminsPage() {
                           onClick={() => setAvatarUrl("")}
                           className="text-xs text-muted-foreground hover:text-destructive h-8 px-2"
                         >
-                          <X className="size-3.5 mr-1" />
+                          <X className="size-3.5" />
                           Remove
                         </Button>
                       ) : null}
@@ -512,8 +511,8 @@ function AdminsPage() {
 
                 {/* avatar gallery */}
                 <div className="pt-3 border-t border-border/60">
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2.5">
-                    Select Inbuilt Avatar:
+                  <p className="text-[11px] font-semibold text-muted-foreground tracking-wider mb-2.5">
+                    Or choose an inbuilt avatar
                   </p>
                   <div className="flex flex-wrap gap-2.5 max-h-36 overflow-y-auto p-1">
                     {INBUILT_AVATARS.map((av) => {
@@ -561,7 +560,7 @@ function AdminsPage() {
                 />
               </div>
 
-              {/* Password Section */}
+              {/* password section */}
               {!editingAdmin ? (
                 <div className="space-y-2">
                   <Label htmlFor="password">Account Password</Label>
@@ -580,7 +579,7 @@ function AdminsPage() {
                   </div>
                 </div>
               ) : (
-                <div className="space-y-3 rounded-xl border border-border/80 bg-secondary/20 p-3.5">
+                <div className="space-y-3 rounded-md border border-border/60 bg-secondary/40 p-3.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <KeyRound className="size-4 text-accent" />
@@ -639,7 +638,7 @@ function AdminsPage() {
                     </div>
                   ) : (
                     <p className="text-xs text-muted-foreground">
-                      Click "Change Password" to update credentials.
+                      You can change the password later by clicking the "Change Password" button.
                     </p>
                   )}
                 </div>

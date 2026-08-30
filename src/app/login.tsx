@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   User,
   UserPlus,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -137,7 +138,7 @@ function LoginPage() {
             <p className="mt-1.5 text-sm text-muted-foreground">
               {isInitialSetup
                 ? "No administrator accounts found. Create the primary Super Admin account."
-                : "Enter your real administrator credentials to log in to the console."}
+                : "Enter your administrator credentials to log in to the dashboard."}
             </p>
           </div>
         </div>
@@ -146,8 +147,8 @@ function LoginPage() {
         <Card className="p-6 sm:p-8 shadow-2xl border-border/80 bg-card/70 backdrop-blur-xl">
           <form onSubmit={handleSubmit} className="space-y-5">
             {errorMsg ? (
-              <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive flex items-center gap-2">
-                <span className="flex size-2 rounded-full bg-destructive shrink-0" />
+              <div className="rounded-lg border border-destructive/10 bg-destructive/5 p-2 justify-center text-xs text-destructive flex gap-2">
+                <X className="size-3.5" />
                 {errorMsg}
               </div>
             ) : null}

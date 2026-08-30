@@ -3,7 +3,6 @@ import { getFirebase } from "@/lib/firebase";
 import type { AdminRecord, AdminRole } from "@/lib/types";
 
 export const INBUILT_AVATARS = [
-  { id: "default", name: "Default", path: "/assets/avatars/default.png" },
   { id: "man", name: "Executive Man", path: "/assets/avatars/man.png" },
   { id: "gent", name: "Gentleman", path: "/assets/avatars/gent.png" },
   { id: "lady", name: "Lady", path: "/assets/avatars/lady.png" },
@@ -42,8 +41,7 @@ function asIso(value: unknown): string {
 
 function mapAdmin(id: string, data: Record<string, unknown>): AdminRecord {
   const roleStr = asString(data.role, "admin");
-  const role: AdminRole =
-    roleStr === "super_admin" || roleStr === "moderator" ? roleStr : "admin";
+  const role: AdminRole = roleStr === "super_admin" || roleStr === "moderator" ? roleStr : "admin";
 
   return {
     id,
@@ -68,7 +66,10 @@ export async function fetchAdmins(): Promise<AdminRecord[]> {
     }
     return snap.docs.map((d) => mapAdmin(d.id, d.data() as Record<string, unknown>));
   } catch (error) {
-    console.error("Failed to fetch admins from Firestore. Ensure security rules allow read access to /admins collection:", error);
+    console.error(
+      "Failed to fetch admins from Firestore. Ensure security rules allow read access to /admins collection:",
+      error,
+    );
     return [];
   }
 }
@@ -93,7 +94,10 @@ export async function saveAdmin(admin: AdminRecord): Promise<void> {
     );
     console.log("Successfully saved admin to Firestore:", admin.id);
   } catch (error) {
-    console.error("Failed to save admin to Firestore. Ensure security rules match /admins/{adminId}:", error);
+    console.error(
+      "Failed to save admin to Firestore. Ensure security rules match /admins/{adminId}:",
+      error,
+    );
     throw error;
   }
 }

@@ -51,6 +51,7 @@ function OverviewPage() {
   const trainings = useAppStore((s) => s.trainings);
   const users = useAppStore((s) => s.users);
   const achievements = useAppStore((s) => s.achievements);
+  const currentAdmin = useAuthStore((s) => s.currentAdmin);
   const [now, setNow] = useState<Date | null>(null);
 
   useEffect(() => {
@@ -86,7 +87,6 @@ function OverviewPage() {
     day: "numeric",
   });
 
-  const currentAdmin = useAuthStore((s) => s.currentAdmin);
   const adminFirstName = currentAdmin?.name ? currentAdmin.name.split(" ")[0] : "Admin";
 
   return (
@@ -117,7 +117,7 @@ function OverviewPage() {
         </div>
       </div>
 
-      <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
         <StatTile
           label="Catalog"
           value={String(trainings.length)}
@@ -146,7 +146,7 @@ function OverviewPage() {
         />
       </div>
 
-      <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)]">
+      <div className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)]">
         <Card className="p-5 sm:p-6">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
@@ -190,7 +190,7 @@ function OverviewPage() {
         </Card>
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
+      <div className="mt-5 grid gap-5 lg:grid-cols-2 xl:grid-cols-3">
         <Card className="flex flex-col pb-4">
           <div className="flex items-center justify-between p-5 sm:p-6">
             <h2 className="font-display text-2xl">Needs a look</h2>
@@ -210,7 +210,7 @@ function OverviewPage() {
                     <Link
                       to="/trainings/$id"
                       params={{ id: item.id }}
-                      className="group flex items-start justify-between gap-3 rounded-xl p-4 transition-[background-color, transform] duration-400 ease-out hover:-translate-y-0.5 bg-secondary/60 hover:bg-secondary"
+                      className="group flex items-start justify-between gap-3 rounded-lg p-4 transition-[background-color, transform] duration-400 ease-out hover:-translate-y-0.5 bg-secondary/60 hover:bg-secondary"
                     >
                       <span>
                         <span className="block text-sm font-medium">{item.title}</span>
@@ -223,7 +223,7 @@ function OverviewPage() {
                   ) : (
                     <Link
                       to="/users"
-                      className="group flex items-start justify-between gap-3 rounded-xl bg-secondary px-3 py-3 transition-[background-color] duration-150 hover:bg-secondary/70"
+                      className="group flex items-start justify-between gap-3 rounded-lg bg-secondary px-3 py-3 transition-[background-color] duration-150 hover:bg-secondary/70"
                     >
                       <span>
                         <span className="block text-sm font-medium">{item.title}</span>
@@ -255,7 +255,7 @@ function OverviewPage() {
             <ul className="space-y-3 px-2 sm:px-4">
               {stats.latest.map((review) => (
                 <li key={`${review.trainingId}-${review.id}`}>
-                  <div className="rounded-xl p-4 transition-[background-color, transform] duration-400 ease-out hover:-translate-y-0.5 bg-secondary/60 hover:bg-secondary">
+                  <div className="rounded-md p-4 transition-[background-color, transform] duration-400 ease-out hover:-translate-y-0.5 bg-secondary/60 hover:bg-secondary">
                     <div className="flex items-center justify-between gap-2">
                       <p className="truncate text-sm font-medium">{review.reviewerName}</p>
                       <Stars value={review.reviewRating} />
@@ -289,7 +289,7 @@ function OverviewPage() {
                   <Link
                     to="/users/$id"
                     params={{ id: user.uid }}
-                    className="flex items-center gap-3 transition-[background-color, transform] duration-400 ease-out hover:-translate-y-0.5 rounded-xl px-2 py-2 bg-secondary/60 hover:bg-secondary"
+                    className="flex items-center gap-3 transition-[background-color, transform] duration-400 ease-out hover:-translate-y-0.5 rounded-lg px-2 py-2 bg-secondary/60 hover:bg-secondary"
                   >
                     <Avatar className="size-9">
                       {user.photoUrl ? <AvatarImage src={user.photoUrl} alt="" /> : null}
@@ -311,7 +311,7 @@ function OverviewPage() {
         </Card>
       </div>
 
-      <Card className="mt-6 p-5 sm:p-6">
+      <Card className="mt-5 p-5 sm:p-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-xs tracking-[0.16em] text-muted-foreground uppercase">Motivation</p>

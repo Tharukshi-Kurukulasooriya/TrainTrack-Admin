@@ -108,18 +108,25 @@ function AchievementsPage() {
             (u) => evaluateAchievement(achievement, u, trainings, reviews).unlocked,
           ).length;
           return (
-            <Card key={achievement.id} className="flex flex-col p-5">
-              <div className="flex items-start justify-between gap-3">
-                <span className="flex size-11 items-center justify-center rounded-xl bg-accent/15 text-accent">
+            <Card key={achievement.id} className="relative flex flex-col p-5 overflow-visible">
+              <span
+                className={`absolute -top-3 -right-3 z-10 flex items-center justify-center rounded-md px-4 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider ring-2 ring-background ${
+                  achievement.isActive
+                    ? "bg-accent text-accent-foreground"
+                    : "bg-secondary text-secondary-foreground"
+                }`}
+              >
+                {achievement.isActive ? "live" : "paused"}
+              </span>
+              <div className="flex items-center gap-3">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-accent/10 text-accent">
                   <AchievementIcon name={achievement.icon} className="size-5" />
                 </span>
-                <Badge variant={achievement.isActive ? "accent" : "secondary"}>
-                  {achievement.isActive ? "Live" : "Paused"}
-                </Badge>
+                <h2 className="font-display text-2xl leading-tight">{achievement.name}</h2>
               </div>
-              <h2 className="mt-4 font-display text-2xl leading-tight">{achievement.name}</h2>
+
               <p className="mt-2 flex-1 text-sm text-muted-foreground">{achievement.description}</p>
-              <p className="mt-4 text-xs tracking-wide text-muted-foreground uppercase">
+              <p className="mt-2 text-xs tracking-wide text-muted-foreground">
                 {achievementKindLabel(achievement.kind)} · {achievement.threshold}
                 {achievement.kind === "complete_category" && achievement.category
                   ? ` · ${achievement.category}`
@@ -128,7 +135,7 @@ function AchievementsPage() {
               <p className="mt-2 text-sm tabular-nums">
                 {unlocked} of {users.length} learners unlocked
               </p>
-              <div className="mt-4 flex gap-2">
+              <div className="mt-4 flex gap-1">
                 <Button
                   size="sm"
                   variant="outline"
@@ -267,7 +274,7 @@ function AchievementsPage() {
                 </Select>
               </div>
             ) : null}
-            <div className="flex items-center justify-between rounded-xl bg-secondary px-3 py-3">
+            <div className="flex items-center justify-between rounded-md bg-secondary px-3 py-3">
               <Label htmlFor="active">Active</Label>
               <Switch
                 id="active"

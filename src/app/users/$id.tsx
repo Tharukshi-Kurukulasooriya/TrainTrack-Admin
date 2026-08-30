@@ -206,7 +206,7 @@ function UserDetailPage() {
                   const percent =
                     p.totalSteps > 0 ? Math.round((p.currentStep / p.totalSteps) * 100) : 0;
                   return (
-                    <li key={p.trainingId} className="rounded-xl bg-secondary p-4">
+                    <li key={p.trainingId} className="rounded-lg bg-secondary p-4">
                       <div className="flex items-center justify-between gap-3">
                         <Link
                           to="/trainings/$id"

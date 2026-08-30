@@ -338,10 +338,10 @@ export function TrainingForm({
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between rounded-xl bg-secondary px-3 py-3">
+                <div className="flex items-center justify-between rounded-md bg-secondary px-4 py-3">
                   <div>
                     <Label htmlFor="premium">Premium program</Label>
-                    <p className="mt-1 text-xs text-muted-foreground">
+                    <p className="text-xs text-muted-foreground">
                       Paid seats unlock after purchase.
                     </p>
                   </div>
@@ -388,7 +388,7 @@ export function TrainingForm({
                   {form.trainingKeyFeatures.map((feature, index) => (
                     <li
                       key={`${feature}-${index}`}
-                      className="flex items-center justify-between gap-3 rounded-lg bg-secondary px-3 py-2 text-sm"
+                      className="flex items-center justify-between gap-3 rounded-md bg-secondary px-4 py-2 text-sm"
                     >
                       <span>{feature}</span>
                       <Button
@@ -467,7 +467,7 @@ export function TrainingForm({
                   }}
                 />
                 {modulePreview ? (
-                  <video controls className="mt-2 w-full rounded-xl" src={modulePreview} />
+                  <video controls className="mt-2 w-full rounded-md" src={modulePreview} />
                 ) : null}
               </div>
               <Button type="button" onClick={addModuleDraft} className="w-full">
@@ -511,7 +511,7 @@ export function TrainingForm({
                     {module.preview || module.moduleVideo ? (
                       <video
                         controls
-                        className="mt-4 w-full rounded-xl"
+                        className="mt-4 w-full rounded-md"
                         src={module.preview || module.moduleVideo}
                       />
                     ) : null}

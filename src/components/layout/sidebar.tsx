@@ -1,9 +1,12 @@
 import { useMemo } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { NAV_ITEMS } from "@/components/layout/nav";
+import { ChevronDown, LogOut, ShieldCheck, User } from "lucide-react";
+import { toast } from "sonner";
+import { sidebarItems } from "@/lib/data/sidebar-data";
 import { useAppStore } from "@/lib/data/store";
 import { useAuthStore } from "@/lib/authStore";
 import { cn, formatNumber, initials } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,14 +15,24 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
-import { Activity, ChevronsUpDown, LogOut, ShieldCheck, User } from "lucide-react";
+import {
+  Sidebar as SidebarContainer,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
 
 function Wordmark() {
   return (
-    <Link to="/" className="flex items-center gap-3 px-3 py-1">
-      <span className="flex size-10 items-center justify-center rounded-lg bg-accent/15 text-accent">
+    <Link to="/" className="flex items-center gap-3 px-3 py-1 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:justify-center">
+      <span className="flex size-8 items-center justify-center rounded-md bg-accent/15 text-accent shrink-0">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
           <path
             d="M334.96 67.31C397.19 60.57 408.94 154.92 346.26 163.74C283.08 172.62 271.14 74.21 334.96 67.31ZM491.81 302.28C492.06 305.96 492.3 309.64 492.54 313.32C492.22 319.3 491.9 325.29 491.57 331.28C486.38 308.09 479.83 288.89 463.64 270.84C450.36 256.02 431.52 246.45 412.54 241.64C361.33 228.66 314.76 256.59 292.01 301.34C287.05 311.09 284.93 323.66 284.19 334.47C280.5 388.96 319.2 437.8 373.4 445.92C387.68 448.05 404.13 446.69 417.82 442.25C423.83 440.29 438.86 431.47 443.15 431.13C442.31 435.06 434.56 438.49 431.65 441.02C420.12 451.01 405.06 456.68 391.01 461.98C336.03 482.74 272.58 462.94 233.34 421.67C225.16 413.07 218.03 402.76 212.41 392.39C209.97 387.89 207.48 377.13 203.59 374.42C203.28 370.47 201.03 366.59 199.95 362.8C197.34 353.61 195.42 343.97 194.5 334.47C193.57 324.95 193.39 314.8 194.69 305.3C195.69 297.96 198.13 290.23 198.17 282.82C200.67 280.45 201.37 273.95 202.4 270.64C205.28 261.47 210.06 251.85 215.15 243.69C217.25 240.32 223.08 234.49 223.29 230.68C226.75 227.89 229.14 223.76 232.13 220.48C239.51 212.41 247.9 204.47 256.99 198.33C267.15 191.48 277.84 185.85 289.08 181.08C293.63 179.16 298.86 178.45 303.17 175.97C323.13 173.89 341.5 169.91 361.87 172.19C411.75 177.79 459.22 212.51 479.24 258.42C485.49 272.76 487.66 287.38 491.81 302.28Z"
@@ -37,19 +50,11 @@ function Wordmark() {
             strokeWidth="0.25"
             strokeLinejoin="round"
           />
-          <path
-            d="M491.81 302.28C492.06 305.96 492.3 309.64 492.54 313.32C492.3 309.64 492.06 305.96 491.81 302.28Z"
-            fill="#fffffe"
-            fillRule="evenodd"
-            stroke="#fffffe"
-            strokeWidth="0.25"
-            strokeLinejoin="round"
-          />
         </svg>
       </span>
-      <span className="flex flex-col leading-none">
+      <span className="flex flex-col leading-none group-data-[collapsible=icon]:hidden">
         <span className="font-display text-lg tracking-tight">TrainTrack</span>
-        <span className="text-[11px] tracking-[0.18em] text-muted-foreground uppercase">Admin</span>
+        <span className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase">Admin</span>
       </span>
     </Link>
   );
@@ -81,7 +86,7 @@ export function Sidebar({ pathname, onNavigate }: { pathname: string; onNavigate
       achievements: achievements.length,
       admins: admins.length,
     };
-  }, [trainings, users, achievements]);
+  }, [trainings, users, achievements, admins]);
 
   const handleLogout = () => {
     logout();
@@ -91,58 +96,54 @@ export function Sidebar({ pathname, onNavigate }: { pathname: string; onNavigate
   };
 
   return (
-    <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
-      <div className="px-3 pt-6 pb-4">
+    <SidebarContainer collapsible="icon">
+      <SidebarHeader className="px-3 pt-3 pb-2 group-data-[collapsible=icon]:px-1 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
         <Wordmark />
-      </div>
-      <nav className="flex flex-1 flex-col gap-1 px-3">
-        {NAV_ITEMS.map((item) => {
-          const active =
-            item.to === "/"
-              ? pathname === "/"
-              : pathname === item.to || pathname.startsWith(`${item.to}/`);
-          const Icon = item.icon;
-          const count = item.countKey ? counts[item.countKey] : undefined;
+      </SidebarHeader>
 
-          return (
-            <Link
-              key={item.to}
-              to={item.to}
-              onClick={onNavigate}
-              className={cn(
-                "flex h-11 items-center gap-3 rounded-lg px-3 text-sm transition-[background-color,color] duration-150",
-                active
-                  ? "bg-secondary text-foreground"
-                  : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
-              )}
-            >
-              <span className="flex items-center gap-3 min-w-0">
-                <Icon className="size-4 shrink-0" />
-                <span className="truncate">{item.label}</span>
-              </span>
+      <SidebarContent className="py-2">
+        {sidebarItems.map((group, index) => (
+          <SidebarGroup key={index}>
+            {group.label && <SidebarGroupLabel>{group.label}</SidebarGroupLabel>}
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {group.items.map((item) => {
+                  const active =
+                    item.href === "/"
+                      ? pathname === "/"
+                      : pathname === item.href || pathname.startsWith(`${item.href}/`);
+                  const count = item.countKey ? counts[item.countKey] : item.badge;
 
-              {/* counter badge */}
-              {count !== undefined && (
-                <span
-                  className={cn(
-                    "ml-auto font-mono text-xs tabular-nums rounded-md px-1.5 py-0.5 text-muted-foreground transition-colors",
-                    active ? "bg-background" : "bg-secondary/80 ",
-                  )}
-                >
-                  {formatNumber(count)}
-                </span>
-              )}
-            </Link>
-          );
-        })}
-      </nav>
+                  return (
+                    <SidebarMenuItem key={item.href}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={active}
+                        tooltip={item.title}
+                        onClick={onNavigate}
+                      >
+                        <Link to={item.href}>
+                          <item.icon className="size-4 shrink-0" />
+                          <span className="group-data-[collapsible=icon]:hidden">{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                      {count !== undefined && (
+                        <SidebarMenuBadge>{formatNumber(Number(count) || 0)}</SidebarMenuBadge>
+                      )}
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
+      </SidebarContent>
 
-      {/* admin profile */}
-      <div className="p-3">
+      <SidebarFooter className="p-3 group-data-[collapsible=icon]:p-1.5 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
         <DropdownMenu>
-          <DropdownMenuTrigger className="w-full flex items-center justify-between gap-2 rounded-xl border border-sidebar-border/80 bg-card/60 p-2.5 text-left transition-all duration-150 hover:bg-card hover:border-sidebar-border focus:outline-none focus:ring-2 focus:ring-accent/40">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="relative flex size-9 shrink-0">
+          <DropdownMenuTrigger className="w-full flex items-center justify-between gap-2 rounded-lg border border-sidebar-border/80 bg-card/60 p-2.5 text-left transition-all duration-150 hover:bg-card hover:border-sidebar-border focus:outline-none focus:ring-2 focus:ring-accent/40 cursor-pointer group-data-[collapsible=icon]:p-1 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:border-transparent group-data-[collapsible=icon]:bg-transparent group-data-[collapsible=icon]:hover:bg-accent/10">
+            <div className="flex items-center gap-2.5 min-w-0 group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:justify-center">
+              <div className="relative flex size-9 shrink-0 items-center justify-center">
                 <div className="flex size-9 items-center justify-center rounded-lg bg-accent/15 font-mono text-xs font-bold text-accent shadow-sm overflow-hidden">
                   {currentAdmin?.avatarUrl ? (
                     <img
@@ -166,7 +167,7 @@ export function Sidebar({ pathname, onNavigate }: { pathname: string; onNavigate
                   />
                 </span>
               </div>
-              <div className="min-w-0 flex-1">
+              <div className="min-w-0 flex-1 group-data-[collapsible=icon]:hidden">
                 <p className="truncate text-xs font-semibold text-foreground leading-tight">
                   {adminName}
                 </p>
@@ -175,22 +176,35 @@ export function Sidebar({ pathname, onNavigate }: { pathname: string; onNavigate
                 </p>
               </div>
             </div>
-            <ChevronsUpDown className="size-4 shrink-0 text-muted-foreground" />
+            <ChevronDown className="size-4 shrink-0 text-muted-foreground group-data-[collapsible=icon]:hidden" />
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent side="right" align="end" className="w-64 p-1.5 shadow-xl">
-            <DropdownMenuLabel className="font-normal p-2">
-              <div className="flex flex-col space-y-1">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-semibold text-foreground truncate">{adminName}</p>
-                  <Badge
-                    variant={isSuperAdmin ? "accent" : "outline"}
-                    className="text-[10px] py-0 px-1.5 shrink-0"
-                  >
-                    {isSuperAdmin ? "Super Admin" : adminRole}
-                  </Badge>
+          <DropdownMenuContent side="right" align="end" sideOffset={8}>
+            <DropdownMenuLabel>
+              <div className="flex items-center gap-3">
+                <div className="relative flex size-10 shrink-0">
+                  <div className="flex size-10 items-center justify-center rounded-md bg-accent/10 overflow-hidden">
+                    {currentAdmin?.avatarUrl ? (
+                      <img
+                        src={currentAdmin.avatarUrl}
+                        alt={adminName}
+                        className="size-full object-cover"
+                      />
+                    ) : (
+                      initials(adminName)
+                    )}
+                  </div>
                 </div>
-                <p className="text-xs text-muted-foreground truncate">{adminEmail}</p>
+                <div className="flex flex-col min-w-0 flex-1 gap-0.5">
+                  <div className="flex items-center justify-between gap-1.5">
+                    <p className="text-sm font-bold text-foreground truncate leading-tight">
+                      {adminName}
+                    </p>
+                  </div>
+                  <p className="text-xs text-muted-foreground truncate leading-tight">
+                    {adminEmail}
+                  </p>
+                </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
@@ -201,30 +215,39 @@ export function Sidebar({ pathname, onNavigate }: { pathname: string; onNavigate
                   if (onNavigate) onNavigate();
                   void navigate({ to: "/admins" });
                 }}
-                className="cursor-pointer gap-2.5 py-2"
               >
-                <User className="size-4 text-accent" />
-                <span className="font-medium text-foreground">Manage Admin Accounts</span>
+                <User className="size-4 text-muted-foreground shrink-0" />
+                <span className="text-[13px] text-foreground">Manage Admin Accounts</span>
               </DropdownMenuItem>
             ) : null}
 
-            <DropdownMenuItem className="cursor-pointer gap-2.5 py-2">
-              <ShieldCheck className="size-4 text-muted-foreground" />
-              <span>Role: {isSuperAdmin ? "Super Admin" : adminRole}</span>
+            <DropdownMenuItem>
+              <ShieldCheck className="size-4 text-muted-foreground shrink-0" />
+              <span className="text-[13px] text-muted-foreground">
+                Role:{" "}
+                <span className="text-foreground">{isSuperAdmin ? "Super Admin" : adminRole}</span>
+              </span>
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={handleLogout}
               variant="destructive"
-              className="cursor-pointer gap-2.5 py-2 text-destructive focus:bg-destructive/10 focus:text-destructive"
+              className="focus:bg-destructive/10"
             >
-              <LogOut className="size-4" />
-              <span className="font-medium">Log out</span>
+              <LogOut className="size-4 shrink-0" />
+              <span className="text-[13px] font-semibold">Sign Out</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
-    </div>
+        <div className="px-2 group-data-[collapsible=icon]:hidden">
+          <p className="pt-2 text-[10px] text-muted-foreground">
+            &copy; {new Date().getFullYear()} TrainTrack. All rights reserved
+          </p>
+        </div>
+      </SidebarFooter>
+    </SidebarContainer>
   );
 }
+
+export default Sidebar;
