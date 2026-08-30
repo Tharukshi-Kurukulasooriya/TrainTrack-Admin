@@ -31,6 +31,7 @@ import {
   totalStudyMinutes,
 } from "@/lib/dashboard";
 import { useAppStore } from "@/hooks/useAppStore";
+import { useAuthStore } from "@/lib/authStore";
 import { formatHours, formatNumber, formatRelative, initials } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
@@ -85,15 +86,18 @@ function OverviewPage() {
     day: "numeric",
   });
 
+  const currentAdmin = useAuthStore((s) => s.currentAdmin);
+  const adminFirstName = currentAdmin?.name ? currentAdmin.name.split(" ")[0] : "Admin";
+
   return (
     <div className="hero-wash -m-6 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="mt-5 text-xs tracking-[0.18em] text-muted-foreground uppercase">
+          <p className="mt-5 text-xs tracking-[0.16em] text-muted-foreground uppercase">
             {dateLabel}
           </p>
           <h1 className="mt-2 font-display text-4xl tracking-tight sm:text-5xl">
-            {now ? `${greeting(now)} Tharukshi. ` : null}
+            {now ? `${greeting(now)}, ${adminFirstName}.` : null}
           </h1>
           <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
             {formatNumber(trainings.length)} programs, {formatNumber(users.length)} learners, and a

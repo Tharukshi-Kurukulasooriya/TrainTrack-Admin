@@ -81,6 +81,20 @@ export type AchievementRecord = {
   createdAt: string;
 };
 
+export type AdminRole = "super_admin" | "admin" | "moderator";
+
+export type AdminRecord = {
+  id: string;
+  name: string;
+  email: string;
+  password?: string;
+  role: AdminRole;
+  avatarUrl?: string;
+  createdAt: string;
+  lastLoginAt?: string | null;
+  isActive: boolean;
+};
+
 export type DataSource = "firebase" | "workspace" | "mixed";
 
 export type ConnectionState = {

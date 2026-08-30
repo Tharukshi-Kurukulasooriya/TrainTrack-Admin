@@ -1,14 +1,17 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { Menu, Plus, Search } from "lucide-react";
 import { Sidebar } from "@/components/layout/sidebar";
 import { CommandPalette } from "@/components/layout/command-palette";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useAppStore } from "@/lib/data/store";
+import { useAuthStore } from "@/lib/authStore";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const hydrate = useAppStore((s) => s.hydrate);
   const hydrating = useAppStore((s) => s.hydrating);
   const ready = useAppStore((s) => s.ready);
@@ -16,8 +19,16 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [commandOpen, setCommandOpen] = useState(false);
 
   useEffect(() => {
-    void hydrate();
-  }, [hydrate]);
+    if (isAuthenticated) {
+      void hydrate();
+    }
+  }, [hydrate, isAuthenticated]);
+
+  useEffect(() => {
+    if (!isAuthenticated && pathname !== "/login") {
+      void navigate({ to: "/login" });
+    }
+  }, [isAuthenticated, pathname, navigate]);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -29,6 +40,14 @@ export function AppShell({ children }: { children: ReactNode }) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
+
+  if (pathname === "/login") {
+    return <div className="min-h-dvh bg-background text-foreground">{children}</div>;
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="min-h-dvh bg-background text-foreground">
