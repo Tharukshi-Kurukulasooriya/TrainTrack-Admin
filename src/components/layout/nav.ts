@@ -1,8 +1,8 @@
 import {
-  AlertTriangle,
   BookOpen,
   LayoutDashboard,
   MessageSquareQuote,
+  Settings,
   ShieldCheck,
   Trophy,
   Users,
@@ -22,4 +22,5 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { to: "/reviews", label: "Feedbacks", icon: MessageSquareQuote, countKey: "reviews" },
   { to: "/achievements", label: "Achievements", icon: Trophy, countKey: "achievements" },
   { to: "/admins", label: "Admin Users", icon: ShieldCheck, countKey: "admins" },
+  { to: "/settings", label: "Settings & Themes", icon: Settings },
 ] as const;

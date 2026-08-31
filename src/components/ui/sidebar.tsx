@@ -118,10 +118,7 @@ export function Sidebar({
   if (collapsible === "none") {
     return (
       <div
-        className={cn(
-          "flex h-full w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground",
-          className,
-        )}
+        className={cn("flex h-full w-full flex-col bg-sidebar text-sidebar-foreground", className)}
       >
         {children}
       </div>
@@ -301,12 +298,12 @@ export function SidebarMenuButton({
   const buttonClass = cn(
     "flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-all duration-150 outline-none cursor-pointer select-none",
     "hover:bg-secondary hover:text-foreground",
-    isActive ? "bg-secondary text-foreground font-semibold" : "text-muted-foreground",
+    isActive ? "bg-secondary text-foreground" : "text-muted-foreground",
     variant === "outline" && "border border-sidebar-border bg-card/60 hover:bg-card",
     size === "lg" && "h-12 px-3",
-    size === "sm" && "h-8 text-xs px-2",
-    size === "default" && "h-10",
-    "group-data-[collapsible=icon]:h-10 group-data-[collapsible=icon]:w-10 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:shrink-0",
+    size === "sm" && "h-10 text-xs px-2",
+    size === "default" && "h-9",
+    "group-data-[collapsible=icon]:h-8 group-data-[collapsible=icon]:w-10 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:shrink-0",
     className,
   );
 

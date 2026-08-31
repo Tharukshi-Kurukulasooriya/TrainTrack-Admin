@@ -2,6 +2,7 @@ import {
   BookOpen,
   LayoutDashboard,
   MessageSquareQuote,
+  Settings,
   ShieldCheck,
   Trophy,
   Users,
@@ -33,6 +34,9 @@ export const sidebarItems: SidebarGroupData[] = [
   },
   {
     label: "Governance",
-    items: [{ title: "Admin Users", href: "/admins", icon: ShieldCheck, countKey: "admins" }],
+    items: [
+      { title: "Admin Users", href: "/admins", icon: ShieldCheck, countKey: "admins" },
+      { title: "Settings", href: "/settings", icon: Settings },
+    ],
   },
 ];

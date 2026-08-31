@@ -57,7 +57,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetContent side="left" className="w-72 p-0">
-            <Sidebar pathname={pathname} onNavigate={() => setMobileOpen(false)} />
+            <Sidebar pathname={pathname} onNavigate={() => setMobileOpen(false)} isMobile />
           </SheetContent>
         </Sheet>
 

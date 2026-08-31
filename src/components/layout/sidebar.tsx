@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { ChevronDown, LogOut, ShieldCheck, User } from "lucide-react";
+import { ChevronDown, LogOut, Settings, ShieldCheck, User } from "lucide-react";
 import { toast } from "sonner";
 import { sidebarItems } from "@/lib/data/sidebar-data";
 import { useAppStore } from "@/lib/data/store";
@@ -31,7 +31,10 @@ import {
 
 function Wordmark() {
   return (
-    <Link to="/" className="flex items-center gap-3 px-3 py-1 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:justify-center">
+    <Link
+      to="/"
+      className="flex items-center gap-3 px-3 py-1 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:justify-center"
+    >
       <span className="flex size-8 items-center justify-center rounded-md bg-accent/15 text-accent shrink-0">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
           <path
@@ -60,7 +63,15 @@ function Wordmark() {
   );
 }
 
-export function Sidebar({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {
+export function Sidebar({
+  pathname,
+  onNavigate,
+  isMobile = false,
+}: {
+  pathname: string;
+  onNavigate?: () => void;
+  isMobile?: boolean;
+}) {
   const navigate = useNavigate();
   const connection = useAppStore((s) => s.connection);
   const trainings = useAppStore((s) => s.trainings);
@@ -96,7 +107,10 @@ export function Sidebar({ pathname, onNavigate }: { pathname: string; onNavigate
   };
 
   return (
-    <SidebarContainer collapsible="icon">
+    <SidebarContainer
+      collapsible={isMobile ? "none" : "icon"}
+      className={isMobile ? "w-full h-full" : undefined}
+    >
       <SidebarHeader className="px-3 pt-3 pb-2 group-data-[collapsible=icon]:px-1 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
         <Wordmark />
       </SidebarHeader>
@@ -220,6 +234,16 @@ export function Sidebar({ pathname, onNavigate }: { pathname: string; onNavigate
                 <span className="text-[13px] text-foreground">Manage Admin Accounts</span>
               </DropdownMenuItem>
             ) : null}
+
+            <DropdownMenuItem
+              onClick={() => {
+                if (onNavigate) onNavigate();
+                void navigate({ to: "/settings" });
+              }}
+            >
+              <Settings className="size-4 text-muted-foreground shrink-0" />
+              <span className="text-[13px] text-foreground">Settings & Appearance</span>
+            </DropdownMenuItem>
 
             <DropdownMenuItem>
               <ShieldCheck className="size-4 text-muted-foreground shrink-0" />

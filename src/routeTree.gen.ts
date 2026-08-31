@@ -14,6 +14,7 @@ import { Route as AchievementsRouteImport } from './app/achievements'
 import { Route as AdminsRouteImport } from './app/admins'
 import { Route as LoginRouteImport } from './app/login'
 import { Route as ReviewsRouteImport } from './app/reviews'
+import { Route as SettingsRouteImport } from './app/settings'
 import { Route as TrainingsIndexRouteImport } from './app/trainings/index'
 import { Route as TrainingsIdRouteImport } from './app/trainings/$id'
 import { Route as UsersIndexRouteImport } from './app/users/index'
@@ -44,6 +45,11 @@ const ReviewsRoute = ReviewsRouteImport.update({
   path: '/reviews',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TrainingsIndexRoute = TrainingsIndexRouteImport.update({
   id: '/trainings/',
   path: '/trainings/',
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/admins': typeof AdminsRoute
   '/login': typeof LoginRoute
   '/reviews': typeof ReviewsRoute
+  '/settings': typeof SettingsRoute
   '/trainings/$id': typeof TrainingsIdRoute
   '/users/$id': typeof UsersIdRoute
   '/trainings/': typeof TrainingsIndexRoute
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/admins': typeof AdminsRoute
   '/login': typeof LoginRoute
   '/reviews': typeof ReviewsRoute
+  '/settings': typeof SettingsRoute
   '/trainings/$id': typeof TrainingsIdRoute
   '/users/$id': typeof UsersIdRoute
   '/trainings': typeof TrainingsIndexRoute
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/admins': typeof AdminsRoute
   '/login': typeof LoginRoute
   '/reviews': typeof ReviewsRoute
+  '/settings': typeof SettingsRoute
   '/trainings/$id': typeof TrainingsIdRoute
   '/users/$id': typeof UsersIdRoute
   '/trainings/': typeof TrainingsIndexRoute
@@ -107,6 +116,7 @@ export interface FileRouteTypes {
     | '/admins'
     | '/login'
     | '/reviews'
+    | '/settings'
     | '/trainings/$id'
     | '/users/$id'
     | '/trainings/'
@@ -118,6 +128,7 @@ export interface FileRouteTypes {
     | '/admins'
     | '/login'
     | '/reviews'
+    | '/settings'
     | '/trainings/$id'
     | '/users/$id'
     | '/trainings'
@@ -129,6 +140,7 @@ export interface FileRouteTypes {
     | '/admins'
     | '/login'
     | '/reviews'
+    | '/settings'
     | '/trainings/$id'
     | '/users/$id'
     | '/trainings/'
@@ -141,6 +153,7 @@ export interface RootRouteChildren {
   AdminsRoute: typeof AdminsRoute
   LoginRoute: typeof LoginRoute
   ReviewsRoute: typeof ReviewsRoute
+  SettingsRoute: typeof SettingsRoute
   TrainingsIdRoute: typeof TrainingsIdRoute
   UsersIdRoute: typeof UsersIdRoute
   TrainingsIndexRoute: typeof TrainingsIndexRoute
@@ -184,6 +197,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReviewsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/trainings/': {
       id: '/trainings/'
       path: '/trainings'
@@ -221,6 +241,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminsRoute: AdminsRoute,
   LoginRoute: LoginRoute,
   ReviewsRoute: ReviewsRoute,
+  SettingsRoute: SettingsRoute,
   TrainingsIdRoute: TrainingsIdRoute,
   UsersIdRoute: UsersIdRoute,
   TrainingsIndexRoute: TrainingsIndexRoute,
