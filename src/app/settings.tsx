@@ -45,8 +45,6 @@ function SettingsPage() {
     toast.success("Settings restored to defaults (Dark Mode & Cyan Theme).");
   };
 
-  const currentThemeObj = THEME_COLORS.find((c) => c.id === themeColor) || THEME_COLORS[0];
-
   return (
     <div className="hero-wash -m-6 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
       <PageHeader

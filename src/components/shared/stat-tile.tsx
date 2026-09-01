@@ -1,14 +1,21 @@
 import type { LucideIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import Counter from "./counter";
 
 export function StatTile({
   label,
   value,
+  prefix,
+  suffix,
+  decimals,
   hint,
   icon: Icon,
 }: {
   label: string;
-  value: string;
+  value: number;
+  prefix?: string;
+  suffix?: string;
+  decimals?: number;
   hint?: string;
   icon: LucideIcon;
 }) {
@@ -20,7 +27,9 @@ export function StatTile({
           <Icon className="size-4" />
         </span>
       </div>
-      <p className="font-display text-3xl tracking-tight tabular-nums">{value}</p>
+      <p className="font-display text-3xl tracking-tight tabular-nums">
+        <Counter value={value} prefix={prefix} suffix={suffix} decimals={decimals} />
+      </p>
       {hint ? <p className="text-xs text-muted-foreground">{hint}</p> : null}
     </Card>
   );

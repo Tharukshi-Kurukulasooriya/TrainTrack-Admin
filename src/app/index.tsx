@@ -97,10 +97,10 @@ function OverviewPage() {
             {dateLabel}
           </p>
           <h1 className="mt-2 font-display text-4xl tracking-tight sm:text-5xl">
-            {now ? `${greeting(now)}, ${adminFirstName}.` : null}
+            {now ? `${greeting(now)}, ${adminFirstName}..!` : null}
           </h1>
           <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
-            {formatNumber(trainings.length)} programs, {formatNumber(users.length)} learners, and a
+            {formatNumber(trainings.length)} programs, {formatNumber(users.length)} employees, and a
             house that is still training.
           </p>
         </div>
@@ -120,19 +120,19 @@ function OverviewPage() {
       <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
         <StatTile
           label="Catalog"
-          value={String(trainings.length)}
+          value={trainings.length}
           hint={`${stats.premium} premium seats`}
           icon={BookOpen}
         />
         <StatTile
           label="Employees"
-          value={String(users.length)}
+          value={users.length}
           hint={`${formatHours(stats.minutes)} studied`}
           icon={Users}
         />
         <StatTile
           label="Feedbacks"
-          value={String(stats.reviews)}
+          value={stats.reviews}
           hint={
             stats.rating ? `${stats.rating.toFixed(1)} house average` : "Awaiting a first voice"
           }
@@ -140,7 +140,8 @@ function OverviewPage() {
         />
         <StatTile
           label="Training Time"
-          value={formatHours(stats.minutes)}
+          value={stats.minutes < 60 ? stats.minutes : Number((stats.minutes / 60).toFixed(1))}
+          suffix={stats.minutes < 60 ? "m" : "h"}
           hint="Across every active seat"
           icon={Clock3}
         />

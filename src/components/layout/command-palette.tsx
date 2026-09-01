@@ -66,7 +66,7 @@ export function CommandPalette({
                   key={item.to}
                   value={item.label}
                   onSelect={() => go(item.to)}
-                  className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground aria-selected:bg-secondary"
+                  className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground aria-selected:bg-accent/10"
                 >
                   <item.icon className="size-4 text-muted-foreground" />
                   {item.label}
@@ -80,7 +80,7 @@ export function CommandPalette({
                     key={training.id}
                     value={training.trainingName}
                     onSelect={() => go(`/trainings/${training.id}`)}
-                    className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground aria-selected:bg-secondary"
+                    className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground aria-selected:bg-accent/10"
                   >
                     <BookOpen className="size-4 text-muted-foreground" />
                     <span className="truncate">{training.trainingName}</span>
@@ -95,7 +95,7 @@ export function CommandPalette({
                     key={user.uid}
                     value={user.username}
                     onSelect={() => go(`/users/${user.uid}`)}
-                    className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground aria-selected:bg-secondary"
+                    className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground aria-selected:bg-accent/10"
                   >
                     <Users className="size-4 text-muted-foreground" />
                     <span className="truncate">{user.username}</span>
@@ -108,7 +108,7 @@ export function CommandPalette({
                 key={achievement.id}
                 value={achievement.name}
                 onSelect={() => go("/achievements")}
-                className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground aria-selected:bg-secondary"
+                className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground aria-selected:bg-accent/10"
               >
                 <Trophy className="size-4 text-muted-foreground" />
                 {achievement.name}
