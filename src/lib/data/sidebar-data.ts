@@ -27,7 +27,7 @@ export const sidebarItems: SidebarGroupData[] = [
     items: [
       { title: "Overview", href: "/", icon: LayoutDashboard },
       { title: "Catalog", href: "/trainings", icon: BookOpen, countKey: "trainings" },
-      { title: "Learners", href: "/users", icon: Users, countKey: "users" },
+      { title: "Employees", href: "/users", icon: Users, countKey: "users" },
       { title: "Feedbacks", href: "/reviews", icon: MessageSquareQuote, countKey: "reviews" },
       { title: "Achievements", href: "/achievements", icon: Trophy, countKey: "achievements" },
     ],

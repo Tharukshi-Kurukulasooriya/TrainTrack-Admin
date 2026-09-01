@@ -91,6 +91,7 @@ function mapReview(
     reviewDate: asIso(data.reviewDate),
     reviewRating: asNumber(data.reviewRating),
     reviewText: asString(data.reviewText),
+    photoUrl: asString(data.photoUrl),
   };
 }
 

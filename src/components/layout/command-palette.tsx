@@ -89,7 +89,7 @@ export function CommandPalette({
               </Command.Group>
             )}
             {filteredUsers.length > 0 && (
-              <Command.Group heading="Learners" className="mt-2 text-xs text-muted-foreground">
+              <Command.Group heading="Employees" className="mt-2 text-xs text-muted-foreground">
                 {filteredUsers.map((user) => (
                   <Command.Item
                     key={user.uid}

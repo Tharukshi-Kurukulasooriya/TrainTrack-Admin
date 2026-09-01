@@ -14,6 +14,7 @@ export type ReviewRecord = {
   reviewDate: string;
   reviewRating: number;
   reviewText: string;
+  photoUrl?: string;
 };
 
 export type TrainingRecord = {

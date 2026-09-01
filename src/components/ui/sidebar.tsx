@@ -297,8 +297,8 @@ export function SidebarMenuButton({
 
   const buttonClass = cn(
     "flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-all duration-150 outline-none cursor-pointer select-none",
-    "hover:bg-secondary hover:text-foreground",
-    isActive ? "bg-secondary text-foreground" : "text-muted-foreground",
+    "hover:bg-accent/10 hover:text-foreground",
+    isActive ? "bg-accent/10 text-foreground" : "text-muted-foreground",
     variant === "outline" && "border border-sidebar-border bg-card/60 hover:bg-card",
     size === "lg" && "h-12 px-3",
     size === "sm" && "h-10 text-xs px-2",
@@ -341,7 +341,7 @@ export function SidebarMenuBadge({ className, ...props }: React.ComponentProps<"
     <div
       data-sidebar="menu-badge"
       className={cn(
-        "pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 font-mono text-xs tabular-nums rounded-md bg-secondary/80 px-1.5 py-0.5 text-muted-foreground group-data-[collapsible=icon]:hidden",
+        "pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-xs tabular-nums rounded-md bg-accent/8 px-1.5 py-0.5 text-muted-foreground group-data-[collapsible=icon]:hidden",
         className,
       )}
       {...props}

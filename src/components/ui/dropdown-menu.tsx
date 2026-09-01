@@ -44,7 +44,7 @@ function DropdownMenuItem({
   return (
     <DropdownMenuPrimitive.Item
       className={cn(
-        "relative flex cursor-default items-center gap-2 rounded-md px-2 py-2 text-sm outline-none select-none focus:bg-secondary data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:size-4",
+        "relative flex cursor-default items-center gap-2 rounded-md px-2 py-2 text-sm outline-none select-none focus:bg-accent/10 data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:size-4",
         inset && "pl-8",
         variant === "destructive" && "text-destructive focus:text-destructive",
         className,

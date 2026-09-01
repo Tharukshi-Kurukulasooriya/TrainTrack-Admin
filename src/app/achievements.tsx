@@ -88,7 +88,7 @@ function AchievementsPage() {
       <PageHeader
         eyebrow="Motivation"
         title="Achievements"
-        description="Rules such as complete 3 trainings, train 3 hours in a day, or buy 3 premium programs. Unlock counts are computed from learner progress."
+        description="Rules such as complete 3 trainings, train 3 hours in a day, or buy 3 premium programs. Unlock counts are computed from employee progress."
         actions={
           <Button
             onClick={() => {
@@ -110,10 +110,8 @@ function AchievementsPage() {
           return (
             <Card key={achievement.id} className="relative flex flex-col p-5 overflow-visible">
               <span
-                className={`absolute -top-3 -right-3 z-10 flex items-center justify-center rounded-md px-4 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider ring-2 ring-background ${
-                  achievement.isActive
-                    ? "bg-accent text-accent-foreground"
-                    : "bg-secondary text-secondary-foreground"
+                className={`absolute -top-3 -right-3 z-10 flex items-center justify-center rounded-md px-4 py-1 text-[10px] font-extrabold text-secondary-foreground uppercase tracking-wider ring-2 ring-background ${
+                  achievement.isActive ? "bg-accent/60" : "bg-secondary"
                 }`}
               >
                 {achievement.isActive ? "live" : "paused"}
@@ -133,7 +131,7 @@ function AchievementsPage() {
                   : ""}
               </p>
               <p className="mt-2 text-sm tabular-nums">
-                {unlocked} of {users.length} learners unlocked
+                {unlocked} of {users.length} employees unlocked
               </p>
               <div className="mt-4 flex gap-1">
                 <Button
@@ -274,7 +272,7 @@ function AchievementsPage() {
                 </Select>
               </div>
             ) : null}
-            <div className="flex items-center justify-between rounded-md bg-secondary px-3 py-3">
+            <div className="flex items-center justify-between rounded-md bg-accent/5 px-3 py-3 mb-5">
               <Label htmlFor="active">Active</Label>
               <Switch
                 id="active"
@@ -298,7 +296,7 @@ function AchievementsPage() {
           if (!open) setPending(null);
         }}
         title="Delete this achievement?"
-        description="Learners keep their history, but this badge will no longer appear in the console."
+        description="Employees keep their history, but this badge will no longer appear in the console."
         onConfirm={() => {
           if (!pending) return;
           void removeAchievement(pending).then(() => toast.success("Achievement removed."));

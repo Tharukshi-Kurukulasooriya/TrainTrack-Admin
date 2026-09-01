@@ -19,9 +19,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { ConfirmDelete } from "@/components/shared/confirm-delete";
 import { Stars } from "@/components/shared/stars";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { TRAINING_CATEGORIES, suggestTrainingId } from "@/lib/categories";
 import { useAppStore } from "@/lib/data/store";
-import { formatRelative } from "@/lib/utils";
+import { formatRelative, initials } from "@/lib/utils";
 import type { ModuleRecord, TrainingRecord } from "@/lib/types";
 
 type ModuleDraft = ModuleRecord & { file?: File; preview?: string };
@@ -268,7 +269,7 @@ export function TrainingForm({
 
               <div className="space-y-2">
                 <Label>Cover image</Label>
-                <label className="flex cursor-pointer flex-col overflow-hidden rounded-xl border border-dashed border-border bg-secondary/40 transition-[border-color] duration-150 hover:border-ring/50">
+                <label className="flex cursor-pointer flex-col overflow-hidden rounded-xl border border-dashed border-border bg-accent/4 transition-[border-color] duration-150 hover:border-ring/50">
                   {imagePreview ? (
                     <img src={imagePreview} alt="" className="aspect-video w-full object-cover" />
                   ) : (
@@ -338,7 +339,7 @@ export function TrainingForm({
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between rounded-md bg-secondary px-4 py-3">
+                <div className="flex items-center justify-between rounded-md bg-accent/8 px-4 py-3">
                   <div>
                     <Label htmlFor="premium">Premium program</Label>
                     <p className="text-xs text-muted-foreground">
@@ -388,7 +389,7 @@ export function TrainingForm({
                   {form.trainingKeyFeatures.map((feature, index) => (
                     <li
                       key={`${feature}-${index}`}
-                      className="flex items-center justify-between gap-3 rounded-md bg-secondary px-4 py-2 text-sm"
+                      className="flex items-center justify-between gap-3 rounded-md bg-accent/8 px-4 py-2 text-sm"
                     >
                       <span>{feature}</span>
                       <Button
@@ -533,24 +534,33 @@ export function TrainingForm({
                 form.reviews.map((review) => (
                   <Card key={review.id} className="p-5">
                     <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <div className="flex flex-wrap items-center gap-2">
-                          <p className="font-medium">{review.reviewerName}</p>
-                          <Stars value={review.reviewRating} />
+                      <div className="flex items-start gap-3.5 min-w-0 flex-1">
+                        <Avatar className="size-10 shrink-0 border border-accent/20">
+                          {review.photoUrl ? (
+                            <AvatarImage src={review.photoUrl} alt={review.reviewerName} />
+                          ) : null}
+                          <AvatarFallback>{initials(review.reviewerName)}</AvatarFallback>
+                        </Avatar>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p className="font-medium">{review.reviewerName}</p>
+                            <Stars value={review.reviewRating} />
+                            <span className="text-xs text-muted-foreground">
+                              {formatRelative(review.reviewDate)}
+                            </span>
+                          </div>
+                          <p className="mt-2 text-sm leading-relaxed">{review.reviewText}</p>
                         </div>
-                        <p className="mt-2 text-sm leading-relaxed">{review.reviewText}</p>
-                        <p className="mt-2 text-xs text-muted-foreground">
-                          {formatRelative(review.reviewDate)}
-                        </p>
                       </div>
                       <Button
-                        type="button"
-                        variant="ghost"
                         size="sm"
+                        variant="ghost"
+                        type="button"
                         className="text-destructive"
                         onClick={() => setPendingReview(review.id)}
                       >
-                        Delete
+                        <Trash2 className="size-3.5" />
+                        Remove
                       </Button>
                     </div>
                   </Card>

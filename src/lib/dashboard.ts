@@ -1,25 +1,17 @@
 import { evaluateAchievement } from "@/lib/achievements";
-import type {
-  AchievementRecord,
-  TrainingRecord,
-  UserRecord,
-} from "@/lib/types";
+import type { AchievementRecord, TrainingRecord, UserRecord } from "@/lib/types";
 
 export function totalStudyMinutes(users: UserRecord[]) {
   return users.reduce((sum, user) => {
     return (
       sum +
-      Object.values(user.trainingProgress).reduce(
-        (inner, item) => inner + item.minutesSpent,
-        0,
-      )
+      Object.values(user.trainingProgress).reduce((inner, item) => inner + item.minutesSpent, 0)
     );
   }, 0);
 }
 
 export function completedCount(user: UserRecord) {
-  return Object.values(user.trainingProgress).filter((item) => item.completed)
-    .length;
+  return Object.values(user.trainingProgress).filter((item) => item.completed).length;
 }
 
 export function monthlyCatalog(trainings: TrainingRecord[]) {
@@ -56,10 +48,7 @@ export function categoryMix(trainings: TrainingRecord[]) {
 export function averageRating(trainings: TrainingRecord[]) {
   const rated = trainings.filter((t) => t.trainingRatingCount > 0);
   if (rated.length === 0) return 0;
-  const weighted = rated.reduce(
-    (sum, t) => sum + t.trainingRating * t.trainingRatingCount,
-    0,
-  );
+  const weighted = rated.reduce((sum, t) => sum + t.trainingRating * t.trainingRatingCount, 0);
   const count = rated.reduce((sum, t) => sum + t.trainingRatingCount, 0);
   return count === 0 ? 0 : weighted / count;
 }
@@ -89,12 +78,10 @@ export function attentionItems(trainings: TrainingRecord[], users: UserRecord[])
       });
     }
   }
-  const idle = users.filter(
-    (user) => Object.keys(user.trainingProgress).length === 0,
-  );
+  const idle = users.filter((user) => Object.keys(user.trainingProgress).length === 0);
   if (idle.length > 0) {
     items.push({
-      title: `${idle.length} learner${idle.length === 1 ? "" : "s"} still idle`,
+      title: `${idle.length} Employee${idle.length === 1 ? "" : "s"} still idle`,
       detail: idle
         .slice(0, 3)
         .map((u) => u.username)
@@ -126,10 +113,7 @@ export function recentReviews(trainings: TrainingRecord[]) {
         trainingName: training.trainingName,
       })),
     )
-    .sort(
-      (a, b) =>
-        new Date(b.reviewDate).getTime() - new Date(a.reviewDate).getTime(),
-    )
+    .sort((a, b) => new Date(b.reviewDate).getTime() - new Date(a.reviewDate).getTime())
     .slice(0, 4);
 }
 
@@ -143,8 +127,7 @@ export function achievementPulse(
     .filter((item) => item.isActive)
     .map((achievement) => {
       const unlocked = users.filter(
-        (user) =>
-          evaluateAchievement(achievement, user, trainings, reviews).unlocked,
+        (user) => evaluateAchievement(achievement, user, trainings, reviews).unlocked,
       ).length;
       return { achievement, unlocked };
     })

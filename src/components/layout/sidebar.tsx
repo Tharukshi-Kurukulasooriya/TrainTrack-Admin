@@ -158,7 +158,7 @@ export function Sidebar({
           <DropdownMenuTrigger className="w-full flex items-center justify-between gap-2 rounded-lg border border-sidebar-border/80 bg-card/60 p-2.5 text-left transition-all duration-150 hover:bg-card hover:border-sidebar-border focus:outline-none focus:ring-2 focus:ring-accent/40 cursor-pointer group-data-[collapsible=icon]:p-1 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:border-transparent group-data-[collapsible=icon]:bg-transparent group-data-[collapsible=icon]:hover:bg-accent/10">
             <div className="flex items-center gap-2.5 min-w-0 group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:justify-center">
               <div className="relative flex size-9 shrink-0 items-center justify-center">
-                <div className="flex size-9 items-center justify-center rounded-lg bg-accent/15 font-mono text-xs font-bold text-accent shadow-sm overflow-hidden">
+                <div className="flex size-9 items-center justify-center rounded-lg bg-accent/15 text-xs font-bold text-accent shadow-sm overflow-hidden">
                   {currentAdmin?.avatarUrl ? (
                     <img
                       src={currentAdmin.avatarUrl}

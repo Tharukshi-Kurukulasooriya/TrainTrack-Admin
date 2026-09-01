@@ -128,10 +128,10 @@ export function roleLabel(role: AdminRole): string {
 export function roleDescription(role: AdminRole): string {
   switch (role) {
     case "super_admin":
-      return "Full access to manage admin accounts, catalog, learners, and system configuration.";
+      return "Full access to manage admin accounts, catalog, employees, and system configuration.";
     case "admin":
-      return "Can manage training catalog, learners, achievements, and review content.";
+      return "Can manage training catalog, employees, achievements, and review content.";
     case "moderator":
-      return "Can review feedback, manage reported issues, and view learner profiles.";
+      return "Can review feedback, manage reported issues, and view employee profiles.";
   }
 }

@@ -87,7 +87,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               className="flex h-10 min-w-0 flex-1 items-center gap-2 rounded-md border border-border bg-card px-3 text-left text-sm text-muted-foreground transition-[border-color] duration-150 hover:border-ring/50 sm:max-w-md"
             >
               <Search className="size-4 shrink-0" />
-              <span className="truncate">Search catalog, learners, reviews</span>
+              <span className="truncate">Search catalog, employees, reviews</span>
               <kbd className="ml-auto hidden rounded border border-border px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground sm:inline">
                 ⌘ K
               </kbd>

@@ -170,7 +170,7 @@ function SettingsPage() {
           </Card>
 
           {/* color selector */}
-          <Card className="p-5 sm:p-6 space-y-6">
+          <Card className="p-5 sm:p-6 space-y-6 mb-10">
             <div className="flex items-center gap-3">
               <div className="flex size-10 items-center justify-center rounded-xl bg-accent/15 text-accent shrink-0">
                 <Palette className="size-5" />
@@ -228,7 +228,7 @@ function SettingsPage() {
             </div>
 
             <div className="space-y-4">
-              <div className="rounded-lg border border-border/60 bg-secondary/40 p-4 space-y-3">
+              <div className="rounded-lg border border-accent/10 bg-accent/5 p-4 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="flex size-7 items-center justify-center rounded-lg bg-accent/20 text-accent font-bold text-xs">

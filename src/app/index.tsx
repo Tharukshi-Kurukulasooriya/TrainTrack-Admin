@@ -106,7 +106,7 @@ function OverviewPage() {
         </div>
         <div className="flex flex-wrap gap-2">
           <Button asChild variant="outline">
-            <Link to="/users">Learners</Link>
+            <Link to="/users">Employees</Link>
           </Button>
           <Button asChild>
             <Link to="/trainings/new">
@@ -256,16 +256,26 @@ function OverviewPage() {
               {stats.latest.map((review) => (
                 <li key={`${review.trainingId}-${review.id}`}>
                   <div className="rounded-md p-4 transition-[background-color, transform] duration-400 ease-out hover:-translate-y-0.5 bg-secondary/60 hover:bg-secondary">
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="truncate text-sm font-medium">{review.reviewerName}</p>
-                      <Stars value={review.reviewRating} />
+                    <div className="flex items-start gap-3">
+                      <Avatar className="size-9 shrink-0 border border-border">
+                        {review.photoUrl ? (
+                          <AvatarImage src={review.photoUrl} alt={review.reviewerName} />
+                        ) : null}
+                        <AvatarFallback>{initials(review.reviewerName)}</AvatarFallback>
+                      </Avatar>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="truncate text-sm font-medium text-muted-foreground">
+                            {review.reviewerName}
+                          </p>
+                          <Stars value={review.reviewRating} />
+                        </div>
+                        <p className="truncate mt-1 line-clamp-2 text-sm">{review.reviewText}</p>
+                        <p className="text-[11px] text-muted-foreground">
+                          {review.trainingName} · {formatRelative(review.reviewDate)}
+                        </p>
+                      </div>
                     </div>
-                    <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
-                      {review.reviewText}
-                    </p>
-                    <p className="mt-1.5 text-xs text-muted-foreground">
-                      {review.trainingName} · {formatRelative(review.reviewDate)}
-                    </p>
                   </div>
                 </li>
               ))}
@@ -281,7 +291,7 @@ function OverviewPage() {
             </Button>
           </div>
           {stats.learners.length === 0 ? (
-            <p className="mt-4 text-sm text-muted-foreground">No learners enrolled yet.</p>
+            <p className="mt-4 text-sm text-muted-foreground">No employees enrolled yet.</p>
           ) : (
             <ul className="mt-4 space-y-3">
               {stats.learners.map(({ user, minutes, completed }) => (

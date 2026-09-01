@@ -5,11 +5,12 @@ import { toast } from "sonner";
 import { PageHeader } from "@/components/shared/page-header";
 import { ConfirmDelete } from "@/components/shared/confirm-delete";
 import { Stars } from "@/components/shared/stars";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useAllReviews, useAppStore } from "@/hooks/useAppStore";
-import { formatRelative } from "@/lib/utils";
+import { formatRelative, initials } from "@/lib/utils";
 import { PageSkeleton } from "@/components/shared/page-skeleton";
 
 export const Route = createFileRoute("/reviews")({
@@ -43,7 +44,7 @@ function ReviewsPage() {
     <div className="hero-wash -m-6 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
       <PageHeader
         eyebrow="Feedback"
-        title="Learner reviews"
+        title="Employee reviews"
         description="Ratings and written feedback across the catalog."
       />
 
@@ -57,33 +58,39 @@ function ReviewsPage() {
         />
       </div>
 
-      <div className="mt-6 space-y-3">
+      <div className="my-6 space-y-3">
         {filtered.map((review) => (
           <Card
             key={`${review.trainingId}-${review.id}`}
             className="flex flex-col gap-4 p-5 sm:flex-row sm:items-start sm:justify-between"
           >
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center gap-3">
-                <p className="font-medium text-foreground">{review.reviewerName}</p>
-                <Stars value={review.reviewRating} />
-                <span className="text-xs text-muted-foreground">
-                  {formatRelative(review.reviewDate)}
-                </span>
+            <div className="flex items-start gap-3.5 min-w-0 flex-1">
+              <Avatar className="size-10 shrink-0 border border-accent/20">
+                {review.photoUrl ? (
+                  <AvatarImage src={review.photoUrl} alt={review.reviewerName} />
+                ) : null}
+                <AvatarFallback>{initials(review.reviewerName)}</AvatarFallback>
+              </Avatar>
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-3">
+                  <p className="font-medium">{review.reviewerName}</p>
+                  <Stars value={review.reviewRating} />
+                  <span className="text-xs text-muted-foreground">
+                    {formatRelative(review.reviewDate)}
+                  </span>
+                </div>
+                <p className="mt-2 text-sm leading-relaxed">{review.reviewText}</p>
+                <p className="text-xs text-muted-foreground">
+                  Program:{" "}
+                  <Link
+                    to="/trainings/$id"
+                    params={{ id: review.trainingId }}
+                    className="font-medium text-muted-foreground underline-offset-4 hover:text-foreground"
+                  >
+                    {review.trainingName}
+                  </Link>
+                </p>
               </div>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                {review.reviewText}
-              </p>
-              <p className="mt-3 text-xs text-muted-foreground">
-                Program:{" "}
-                <Link
-                  to="/trainings/$id"
-                  params={{ id: review.trainingId }}
-                  className="font-medium text-foreground underline-offset-4 hover:underline"
-                >
-                  {review.trainingName}
-                </Link>
-              </p>
             </div>
             <Button
               size="sm"
@@ -96,7 +103,7 @@ function ReviewsPage() {
                 })
               }
             >
-              <Trash2 className="size-4" />
+              <Trash2 className="size-3.5" />
               Remove
             </Button>
           </Card>

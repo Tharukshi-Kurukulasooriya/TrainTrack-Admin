@@ -339,7 +339,7 @@ function AdminsPage() {
               className="p-5 flex flex-col justify-between relative overflow-visible"
             >
               {isCurrent ? (
-                <span className="absolute -top-2 -right-2 z-10 flex items-center justify-center rounded-md bg-card px-4 py-1 font-mono text-[12px] font-extrabold text-secondary-foreground ring-2 ring-background uppercase tracking-wider">
+                <span className="absolute -top-3 -right-3 z-10 flex items-center justify-center rounded-md bg-accent/60 px-4 py-1 text-[10px] font-extrabold text-secondary-foreground ring-2 ring-background uppercase tracking-wider">
                   you
                 </span>
               ) : null}
@@ -464,7 +464,7 @@ function AdminsPage() {
 
             <div className="space-y-4 py-4">
               {/* profile avatar selection */}
-              <div className="space-y-3 rounded-lg border border-border/80 bg-secondary/30 p-4">
+              <div className="space-y-3 rounded-lg border border-border/80 bg-accent/4 p-4">
                 <Label className="text-xs font-semibold tracking-wider text-muted-foreground flex items-center gap-1.5">
                   Admin Profile Picture
                 </Label>
@@ -579,7 +579,7 @@ function AdminsPage() {
                   </div>
                 </div>
               ) : (
-                <div className="space-y-3 rounded-md border border-border/60 bg-secondary/40 p-3.5">
+                <div className="space-y-3 rounded-md border border-accent/15 bg-accent/5 p-3.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <KeyRound className="size-4 text-accent" />
@@ -663,7 +663,7 @@ function AdminsPage() {
                       <div className="flex flex-col py-0.5">
                         <span className="font-semibold text-foreground">Administrator</span>
                         <span className="text-[11px] text-muted-foreground">
-                          Manage catalog, learners, and achievements
+                          Manage catalog, employees, and achievements
                         </span>
                       </div>
                     </SelectItem>
@@ -679,7 +679,7 @@ function AdminsPage() {
                 </Select>
               </div>
 
-              <div className="flex items-center justify-between pt-2">
+              <div className="flex items-center justify-between rounded-md bg-accent/5 px-3 py-3 my-5">
                 <div className="space-y-0.5">
                   <Label>Account Active Status</Label>
                   <p className="text-xs text-muted-foreground">

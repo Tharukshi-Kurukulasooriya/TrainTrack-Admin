@@ -45,8 +45,8 @@ function UsersPage() {
     <div className="hero-wash -m-6 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
       <PageHeader
         eyebrow="Roster"
-        title="Learners"
-        description="Profiles, progress, watchlist, and activity across the learning console."
+        title="Employees"
+        description="Profiles, progress, watchlist, and activity across the training platform."
         actions={
           <Button
             onClick={() => {
@@ -65,7 +65,7 @@ function UsersPage() {
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Filter learners by name or email…"
+          placeholder="Filter employees by name or email…"
           className="pl-9"
         />
       </div>
@@ -132,11 +132,11 @@ function UsersPage() {
       {filtered.length === 0 ? (
         <Card className="mt-6 flex flex-col items-center p-12 text-center">
           <Users className="size-10 text-muted-foreground" />
-          <p className="mt-4 font-display text-2xl">No learners found</p>
+          <p className="mt-4 font-display text-2xl">No employees found</p>
           <p className="mt-1 text-sm text-muted-foreground">
             {search
               ? "Try relaxing your search query."
-              : "Click 'Add learner' above to register your first learner."}
+              : "Click 'Add Employee' above to register your first employee."}
           </p>
         </Card>
       ) : null}
