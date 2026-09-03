@@ -23,6 +23,9 @@ import type {
   TrainingRecord,
   UserRecord,
 } from "@/lib/types";
+import { preloadImages } from "@/lib/imageCache";
+import { resolveAvatarUrl } from "@/lib/utils";
+import { INBUILT_AVATARS } from "@/lib/services/adminService";
 
 type AppStore = {
   ready: boolean;
@@ -94,6 +97,15 @@ export const useAppStore = create<AppStore>((set, get) => {
             message: "Connected to database.",
           },
         });
+
+        // trigger memory caching for all images
+        const imageUrlsToPreload = [
+          ...trainings.map((t) => t.trainingImage),
+          ...users.map((u) => resolveAvatarUrl(u.photoUrl)),
+          ...trainings.flatMap((t) => t.reviews.map((r) => resolveAvatarUrl(r.photoUrl))),
+          ...INBUILT_AVATARS.map((av) => av.path),
+        ];
+        preloadImages(imageUrlsToPreload);
       } catch (error) {
         console.error("Failed to hydrate database", error);
         set({

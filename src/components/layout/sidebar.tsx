@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ChevronDown, LogOut, Settings, ShieldCheck, User } from "lucide-react";
 import { toast } from "sonner";
@@ -6,6 +6,7 @@ import { sidebarItems } from "@/lib/data/sidebar-data";
 import { useAppStore } from "@/lib/data/store";
 import { useAuthStore } from "@/lib/authStore";
 import { cn, formatNumber, initials } from "@/lib/utils";
+import { ConfirmDialog as ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
@@ -57,7 +58,9 @@ function Wordmark() {
       </span>
       <span className="flex flex-col leading-none group-data-[collapsible=icon]:hidden">
         <span className="font-display text-lg tracking-tight">TrainTrack</span>
-        <span className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase">Admin</span>
+        <span className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase">
+          Admin v1.0.0
+        </span>
       </span>
     </Link>
   );
@@ -81,6 +84,7 @@ export function Sidebar({
   const currentAdmin = useAuthStore((s) => s.currentAdmin);
   const logout = useAuthStore((s) => s.logout);
   const live = connection.catalog === "firebase";
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
   const adminName = currentAdmin?.name || "Admin User";
   const adminEmail = currentAdmin?.email || "admin@traintrack.com";
@@ -101,7 +105,7 @@ export function Sidebar({
 
   const handleLogout = () => {
     logout();
-    toast.success("Logged out successfully.");
+    toast.success("Signed out successfully.");
     if (onNavigate) onNavigate();
     void navigate({ to: "/login" });
   };
@@ -255,7 +259,7 @@ export function Sidebar({
 
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={handleLogout}
+              onClick={() => setLogoutDialogOpen(true)}
               variant="destructive"
               className="focus:bg-destructive/10"
             >
@@ -264,6 +268,14 @@ export function Sidebar({
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <ConfirmDialog
+          open={logoutDialogOpen}
+          onOpenChange={setLogoutDialogOpen}
+          title="Are you sure you want to sign out?"
+          description="You will need to sign in again to access the admin dashboard."
+          confirmLabel="Sign Out"
+          onConfirm={handleLogout}
+        />
         <div className="px-2 group-data-[collapsible=icon]:hidden">
           <p className="pt-2 text-[10px] text-muted-foreground">
             &copy; {new Date().getFullYear()} TrainTrack. All rights reserved

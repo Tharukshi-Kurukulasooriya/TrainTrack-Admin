@@ -347,7 +347,7 @@ function AdminsPage() {
               <div>
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
-                    <Avatar className="size-11 border border-border overflow-hidden shrink-0">
+                    <Avatar className="size-11 border border-accent/30 overflow-hidden shrink-0">
                       {admin.avatarUrl ? (
                         <AvatarImage
                           src={admin.avatarUrl}
@@ -355,7 +355,7 @@ function AdminsPage() {
                           className="object-cover"
                         />
                       ) : null}
-                      <AvatarFallback className="font-mono text-sm font-bold bg-secondary text-foreground">
+                      <AvatarFallback className="font-mono text-sm font-bold bg-accent/10 text-accent">
                         {initials(admin.name)}
                       </AvatarFallback>
                     </Avatar>
@@ -425,8 +425,8 @@ function AdminsPage() {
                     variant="outline"
                     className={`text-[11px] ${
                       admin.isActive
-                        ? "border-emerald-500/30 text-emerald-600 bg-emerald-500/10"
-                        : "border-destructive/30 text-destructive bg-destructive/10"
+                        ? "border-emerald-500/10 text-emerald-600 bg-emerald-500/10"
+                        : "border-destructive/10 text-destructive bg-destructive/10"
                     }`}
                   >
                     {admin.isActive ? "Active" : "Inactive"}
@@ -493,10 +493,10 @@ function AdminsPage() {
                       {avatarUrl ? (
                         <Button
                           type="button"
-                          variant="ghost"
                           size="sm"
+                          variant="ghost"
+                          className="text-xs h-8 px-2 text-muted-foreground hover:text-destructive hover:bg-transparent"
                           onClick={() => setAvatarUrl("")}
-                          className="text-xs text-muted-foreground hover:text-destructive h-8 px-2"
                         >
                           <X className="size-3.5" />
                           Remove
@@ -525,7 +525,7 @@ function AdminsPage() {
                           title={av.name}
                           className={`relative size-11 rounded-full border-2 overflow-hidden transition-all duration-150 ${
                             isSelected
-                              ? "border-accent ring-2 ring-accent/50 scale-105"
+                              ? "border-accent ring-1 ring-accent/50 scale-105"
                               : "border-border/60 hover:border-accent/60 opacity-80 hover:opacity-100"
                           }`}
                         >

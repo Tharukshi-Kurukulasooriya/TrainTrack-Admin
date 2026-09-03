@@ -9,17 +9,19 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-export function ConfirmDelete({
+export function ConfirmDialog({
   open,
   onOpenChange,
   title,
   description,
+  confirmLabel = "Delete",
   onConfirm,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string;
   description: string;
+  confirmLabel?: string;
   onConfirm: () => void;
 }) {
   return (
@@ -32,10 +34,10 @@ export function ConfirmDelete({
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className="bg-destructive-background/80 text-destructive-foreground hover:bg-destructive-background"
             onClick={onConfirm}
           >
-            Delete
+            {confirmLabel}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

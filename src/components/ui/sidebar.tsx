@@ -298,7 +298,7 @@ export function SidebarMenuButton({
   const buttonClass = cn(
     "flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-all duration-150 outline-none cursor-pointer select-none",
     "hover:bg-accent/10 hover:text-foreground",
-    isActive ? "bg-accent/10 text-foreground" : "text-muted-foreground",
+    isActive ? "bg-accent/15 text-foreground" : "text-muted-foreground",
     variant === "outline" && "border border-sidebar-border bg-card/60 hover:bg-card",
     size === "lg" && "h-12 px-3",
     size === "sm" && "h-10 text-xs px-2",

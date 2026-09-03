@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Plus, Search, Trash2, Users } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/shared/page-header";
-import { ConfirmDelete } from "@/components/shared/confirm-delete";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { LearnerDialog } from "@/components/users/learner-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -12,7 +12,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useAppStore } from "@/hooks/useAppStore";
 import type { UserRecord } from "@/lib/types";
-import { formatHours, initials } from "@/lib/utils";
+import { formatHours, initials, resolveAvatarUrl } from "@/lib/utils";
 import { PageSkeleton } from "@/components/shared/page-skeleton";
 
 export const Route = createFileRoute("/users/")({
@@ -79,9 +79,15 @@ function UsersPage() {
           return (
             <Card key={u.uid} className="flex flex-col p-5">
               <div className="flex items-start gap-4">
-                <Avatar className="size-18">
-                  {u.photoUrl ? <AvatarImage src={u.photoUrl} alt="" /> : null}
-                  <AvatarFallback className="text-2xl">
+                <Avatar className="size-18 border border-border/80 overflow-hidden shrink-0">
+                  {u.photoUrl ? (
+                    <AvatarImage
+                      src={resolveAvatarUrl(u.photoUrl)}
+                      alt=""
+                      className="object-cover"
+                    />
+                  ) : null}
+                  <AvatarFallback className="text-2xl font-bold bg-accent/10 text-accent">
                     {initials(u.username || u.email)}
                   </AvatarFallback>
                 </Avatar>
@@ -93,6 +99,18 @@ function UsersPage() {
                   </h2>
                   <p className="truncate text-xs text-muted-foreground">{u.email}</p>
                   <div className="mt-2 flex flex-wrap gap-1.5">
+                    {u.isBanned ? (
+                      <Badge variant="destructive" className="text-[11px] font-semibold">
+                        Banned
+                      </Badge>
+                    ) : u.timeoutUntil && new Date(u.timeoutUntil) > new Date() ? (
+                      <Badge
+                        variant="outline"
+                        className="text-[11px] border-amber-500/30 text-amber-500 bg-amber-500/10 font-semibold"
+                      >
+                        Timeout
+                      </Badge>
+                    ) : null}
                     <Badge variant="secondary">{completedCount} complete</Badge>
                     <Badge variant="outline">{formatHours(totalMins)}</Badge>
                   </div>
@@ -143,16 +161,16 @@ function UsersPage() {
 
       <LearnerDialog open={dialogOpen} onOpenChange={setDialogOpen} initial={editingUser} />
 
-      <ConfirmDelete
+      <ConfirmDialog
         open={Boolean(pendingDelete)}
         onOpenChange={(open) => {
           if (!open) setPendingDelete(null);
         }}
-        title="Remove learner?"
-        description="This removes the learner profile from the console and Firestore database."
+        title="Remove employee?"
+        description="This removes the employee profile from the console and Firestore database."
         onConfirm={() => {
           if (!pendingDelete) return;
-          void removeUser(pendingDelete).then(() => toast.success("Learner profile removed."));
+          void removeUser(pendingDelete).then(() => toast.success("Employee profile removed."));
           setPendingDelete(null);
         }}
       />

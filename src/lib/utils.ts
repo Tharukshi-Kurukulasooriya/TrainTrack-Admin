@@ -6,9 +6,9 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatCurrency(value: number) {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("en-LK", {
     style: "currency",
-    currency: "USD",
+    currency: "LKR",
     maximumFractionDigits: value % 1 === 0 ? 0 : 2,
   }).format(value);
 }
@@ -67,4 +67,18 @@ export function slugify(value: string) {
     .replace(/[^A-Z0-9]+/g, "-")
     .replace(/^-|-$/g, "")
     .slice(0, 24);
+}
+
+export function resolveAvatarUrl(url: string | null | undefined): string {
+  if (!url) return "";
+  if (
+    url.startsWith("http://") ||
+    url.startsWith("https://") ||
+    url.startsWith("data:") ||
+    url.startsWith("blob:") ||
+    url.startsWith("/")
+  ) {
+    return url;
+  }
+  return `/${url}`;
 }

@@ -211,7 +211,7 @@ function OverviewPage() {
                     <Link
                       to="/trainings/$id"
                       params={{ id: item.id }}
-                      className="group flex items-start justify-between gap-3 rounded-lg p-4 transition-[background-color, transform] duration-400 ease-out hover:-translate-y-0.5 bg-secondary/60 hover:bg-secondary"
+                      className="group flex items-start justify-between gap-3 rounded-lg p-4 transition-[background-color, transform] duration-400 ease-out hover:-translate-y-0.5 bg-accent/4 hover:bg-accent/8"
                     >
                       <span>
                         <span className="block text-sm font-medium">{item.title}</span>
@@ -256,7 +256,7 @@ function OverviewPage() {
             <ul className="space-y-3 px-2 sm:px-4">
               {stats.latest.map((review) => (
                 <li key={`${review.trainingId}-${review.id}`}>
-                  <div className="rounded-md p-4 transition-[background-color, transform] duration-400 ease-out hover:-translate-y-0.5 bg-secondary/60 hover:bg-secondary">
+                  <div className="rounded-md p-4 transition-[background-color, transform] duration-400 ease-out hover:-translate-y-0.5 bg-accent/4 hover:bg-accent/8">
                     <div className="flex items-start gap-3">
                       <Avatar className="size-9 shrink-0 border border-border">
                         {review.photoUrl ? (
@@ -300,7 +300,7 @@ function OverviewPage() {
                   <Link
                     to="/users/$id"
                     params={{ id: user.uid }}
-                    className="flex items-center gap-3 transition-[background-color, transform] duration-400 ease-out hover:-translate-y-0.5 rounded-lg px-2 py-2 bg-secondary/60 hover:bg-secondary"
+                    className="flex items-center gap-3 transition-[background-color, transform] duration-400 ease-out hover:-translate-y-0.5 rounded-lg px-2 py-2 bg-accent/4 hover:bg-accent/8"
                   >
                     <Avatar className="size-9">
                       {user.photoUrl ? <AvatarImage src={user.photoUrl} alt="" /> : null}
@@ -337,7 +337,7 @@ function OverviewPage() {
         ) : (
           <ul className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             {stats.badges.map(({ achievement, unlocked }) => (
-              <li key={achievement.id} className="rounded-xl bg-secondary p-4">
+              <li key={achievement.id} className="rounded-xl bg-accent/8 p-4">
                 <span className="flex size-9 items-center justify-center rounded-lg bg-card text-accent">
                   <AchievementIcon name={achievement.icon} className="size-4" />
                 </span>

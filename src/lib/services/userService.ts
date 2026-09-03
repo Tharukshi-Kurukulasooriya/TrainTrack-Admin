@@ -64,6 +64,9 @@ function mapUser(uid: string, data: Record<string, unknown>): UserRecord {
     studyGoalMinutes: asNumber(data.studyGoalMinutes, 15),
     createdAt: asIso(data.createdAt),
     source: "firebase",
+    isBanned: asBool(data.isBanned, false),
+    bannedReason: asString(data.bannedReason),
+    timeoutUntil: data.timeoutUntil ? asIso(data.timeoutUntil) : null,
   };
 }
 
@@ -107,6 +110,9 @@ export async function saveUser(user: UserRecord): Promise<void> {
       trainingProgress: progress,
       studyGoalMinutes: user.studyGoalMinutes,
       createdAt: user.createdAt,
+      isBanned: Boolean(user.isBanned),
+      bannedReason: user.bannedReason || "",
+      timeoutUntil: user.timeoutUntil || null,
     },
     { merge: true },
   );

@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import { cn } from "@/lib/utils";
+import { isImageCached, preloadImage } from "@/lib/imageCache";
 
 function Avatar({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Root>) {
   return (
@@ -11,9 +12,42 @@ function Avatar({ className, ...props }: React.ComponentProps<typeof AvatarPrimi
   );
 }
 
-function AvatarImage({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Image>) {
+function AvatarImage({ className, src, ...props }: React.ComponentProps<typeof AvatarPrimitive.Image>) {
+  const [loaded, setLoaded] = React.useState(() => Boolean(src && isImageCached(src)));
+
+  React.useEffect(() => {
+    if (!src) return;
+    if (isImageCached(src)) {
+      setLoaded(true);
+      return;
+    }
+    let isMounted = true;
+    preloadImage(src).then((success) => {
+      if (isMounted && success) {
+        setLoaded(true);
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, [src]);
+
+  if (loaded && src) {
+    return (
+      <img
+        src={src}
+        alt=""
+        decoding="async"
+        loading="eager"
+        className={cn("aspect-square size-full object-cover", className)}
+        {...(props as React.ImgHTMLAttributes<HTMLImageElement>)}
+      />
+    );
+  }
+
   return (
     <AvatarPrimitive.Image
+      src={src}
       className={cn("aspect-square size-full object-cover", className)}
       {...props}
     />

@@ -17,6 +17,29 @@ export type ReviewRecord = {
   photoUrl?: string;
 };
 
+export type CertificateTemplate = {
+  layout: "classic" | "modern" | "minimal";
+  borderStyle: "double" | "frame" | "none";
+  motif: "ribbon" | "laurel" | "geometric" | "none";
+  title: string;
+  subtitle: string;
+  recipientName: string;
+  completionText: string;
+  issuerName: string;
+  signatureName: string;
+  issueDate: string;
+  accentColor: string;
+  secondaryColor: string;
+  credentialLabel: string;
+  footerText: string;
+  showSeal: boolean;
+  sealStyle: "classic" | "rosette" | "shield" | "laurel";
+  sealColor: string;
+  showLogo: boolean;
+  showWatermark: boolean;
+  signatureUrl?: string;
+};
+
 export type TrainingRecord = {
   id: string;
   trainingName: string;
@@ -34,6 +57,7 @@ export type TrainingRecord = {
   trainingRatingCount: number;
   trainingEnrolledStudents: number;
   trainingAddedDate: string;
+  certificateTemplate?: CertificateTemplate;
   modules: ModuleRecord[];
   reviews: ReviewRecord[];
 };
@@ -59,6 +83,9 @@ export type UserRecord = {
   studyGoalMinutes: number;
   createdAt: string;
   source: "firebase" | "workspace";
+  isBanned?: boolean;
+  bannedReason?: string;
+  timeoutUntil?: string | null;
 };
 
 export type AchievementKind =

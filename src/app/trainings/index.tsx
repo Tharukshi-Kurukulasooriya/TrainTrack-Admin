@@ -18,6 +18,7 @@ import { categoryIcon, TRAINING_CATEGORIES } from "@/lib/categories";
 import { useAppStore } from "@/hooks/useAppStore";
 import { cn, formatCurrency, formatNumber } from "@/lib/utils";
 import { PageSkeleton } from "@/components/shared/page-skeleton";
+import { CachedImage } from "@/components/shared/cached-image";
 
 export const Route = createFileRoute("/trainings/")({
   component: TrainingsPage,
@@ -113,13 +114,13 @@ function TrainingsPage() {
               className={cn(
                 "group flex flex-col overflow-hidden transition-all duration-500 ease-out hover:-translate-y-1.5",
                 t.trainingIsPremium
-                  ? "bg-linear-to-b from-card via-card to-warning/20 border-warning/20 hover:border-warning hover:to-warning/30"
+                  ? "bg-linear-to-b from-card via-card to-warning/30 border-warning/30 hover:border-warning hover:to-warning/40"
                   : "bg-card hover:bg-linear-to-b hover:from-card hover:via-card hover:to-accent/10 hover:ring-1 hover:ring-accent/10",
               )}
             >
-              <div className="relative aspect-video w-full overflow-hidden bg-secondary">
+              <div className="relative aspect-video w-full overflow-hidden bg-accent/6">
                 {t.trainingImage ? (
-                  <img
+                  <CachedImage
                     src={t.trainingImage}
                     alt=""
                     className="h-full w-full object-cover transition-transform duration-600 group-hover:scale-102"

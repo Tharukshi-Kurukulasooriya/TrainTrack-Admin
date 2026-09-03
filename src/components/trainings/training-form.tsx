@@ -17,7 +17,8 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { ConfirmDelete } from "@/components/shared/confirm-delete";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { CertificateEditor, CERTIFICATE_DEFAULTS } from "@/components/trainings/certificate-editor";
 import { Stars } from "@/components/shared/stars";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { TRAINING_CATEGORIES, suggestTrainingId } from "@/lib/categories";
@@ -45,6 +46,7 @@ function emptyTraining(id: string): TrainingRecord {
     trainingRatingCount: 0,
     trainingEnrolledStudents: 0,
     trainingAddedDate: new Date().toISOString(),
+    certificateTemplate: { ...CERTIFICATE_DEFAULTS },
     modules: [],
     reviews: [],
   };
@@ -236,6 +238,7 @@ export function TrainingForm({
               </Badge>
             </TabsTrigger>
           ) : null}
+          {mode === "edit" ? <TabsTrigger value="certificates">Certificates</TabsTrigger> : null}
         </TabsList>
 
         <TabsContent value="program">
@@ -355,7 +358,7 @@ export function TrainingForm({
 
                 {form.trainingIsPremium ? (
                   <div className="space-y-2">
-                    <Label htmlFor="fee">Fee (USD)</Label>
+                    <Label htmlFor="fee">Fee (LKR)</Label>
                     <Input
                       id="fee"
                       type="number"
@@ -569,6 +572,18 @@ export function TrainingForm({
             </div>
           </TabsContent>
         ) : null}
+
+        {mode === "edit" ? (
+          <TabsContent value="certificates">
+            <CertificateEditor
+              value={form.certificateTemplate ?? { ...CERTIFICATE_DEFAULTS }}
+              trainingName={form.trainingName}
+              onChange={(certificateTemplate) =>
+                setField("certificateTemplate", certificateTemplate)
+              }
+            />
+          </TabsContent>
+        ) : null}
       </Tabs>
 
       <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
@@ -580,7 +595,7 @@ export function TrainingForm({
         </Button>
       </div>
 
-      <ConfirmDelete
+      <ConfirmDialog
         open={Boolean(pendingModule)}
         onOpenChange={(open) => {
           if (!open) setPendingModule(null);
@@ -594,7 +609,7 @@ export function TrainingForm({
         }}
       />
 
-      <ConfirmDelete
+      <ConfirmDialog
         open={Boolean(pendingReview)}
         onOpenChange={(open) => {
           if (!open) setPendingReview(null);

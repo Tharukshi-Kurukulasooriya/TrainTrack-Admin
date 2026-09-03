@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { MessageSquareQuote, Search, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/shared/page-header";
-import { ConfirmDelete } from "@/components/shared/confirm-delete";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { Stars } from "@/components/shared/stars";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -120,7 +120,7 @@ function ReviewsPage() {
         ) : null}
       </div>
 
-      <ConfirmDelete
+      <ConfirmDialog
         open={Boolean(pending)}
         onOpenChange={(open) => {
           if (!open) setPending(null);

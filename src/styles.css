@@ -116,6 +116,7 @@ html[data-theme-color="rose"] {
 
   /* status colors */
   --color-destructive: #f85149;
+  --color-destructive-background: #b91c1c;
   --color-destructive-foreground: #ffffff;
   --color-success: var(--accent);
   --color-warning: #f59e0b;

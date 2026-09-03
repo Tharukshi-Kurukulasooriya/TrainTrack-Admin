@@ -1,7 +1,7 @@
 import { collection, deleteDoc, doc, getDocs, setDoc, Timestamp } from "firebase/firestore";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { getFirebase } from "@/lib/firebase";
-import type { ModuleRecord, ReviewRecord, TrainingRecord } from "@/lib/types";
+import type { CertificateTemplate, ModuleRecord, ReviewRecord, TrainingRecord } from "@/lib/types";
 
 function asString(value: unknown, fallback = ""): string {
   return typeof value === "string" ? value : fallback;
@@ -23,6 +23,44 @@ function asBool(value: unknown, fallback = false): boolean {
 function asStringArray(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
   return value.map((item) => String(item));
+}
+
+function mapCertificate(value: unknown): CertificateTemplate | undefined {
+  if (!value || typeof value !== "object") return undefined;
+  const data = value as Record<string, unknown>;
+  const layout = data.layout;
+  return {
+    layout: layout === "modern" || layout === "minimal" ? layout : "classic",
+    borderStyle:
+      data.borderStyle === "frame" || data.borderStyle === "none" ? data.borderStyle : "double",
+    motif:
+      data.motif === "laurel" || data.motif === "geometric" || data.motif === "none"
+        ? data.motif
+        : "ribbon",
+    title: asString(data.title, "Certificate of Completion"),
+    subtitle: asString(data.subtitle, "This certificate is proudly presented to"),
+    recipientName: asString(data.recipientName, "Learner Name"),
+    completionText: asString(
+      data.completionText,
+      "for successfully completing this training program",
+    ),
+    issuerName: asString(data.issuerName, "TrainTrack Academy"),
+    signatureName: asString(data.signatureName, "Training Director"),
+    issueDate: asString(data.issueDate, "September 03, 2026"),
+    accentColor: asString(data.accentColor, "#1cadb3"),
+    secondaryColor: asString(data.secondaryColor, "#fd8a13"),
+    credentialLabel: asString(data.credentialLabel, "Professional credential"),
+    footerText: asString(data.footerText, "TrainTrack Learning & Development"),
+    showSeal: data.showSeal !== false,
+    sealStyle:
+      data.sealStyle === "rosette" || data.sealStyle === "shield" || data.sealStyle === "laurel"
+        ? data.sealStyle
+        : "classic",
+    sealColor: asString(data.sealColor, "#c62828"),
+    showLogo: data.showLogo !== false,
+    showWatermark: data.showWatermark !== false,
+    signatureUrl: asString(data.signatureUrl),
+  };
 }
 
 function asIso(value: unknown): string {
@@ -62,6 +100,7 @@ function mapTraining(
     trainingRatingCount: asNumber(data.trainingRatingCount),
     trainingEnrolledStudents: asNumber(data.trainingEnrolledStudents),
     trainingAddedDate: asIso(data.trainingAddedDate),
+    certificateTemplate: mapCertificate(data.certificateTemplate),
     modules,
     reviews,
   };
@@ -139,6 +178,7 @@ export async function saveTraining(training: TrainingRecord): Promise<void> {
     trainingRating: training.trainingRating,
     trainingRatingCount: training.trainingRatingCount,
     trainingEnrolledStudents: training.trainingEnrolledStudents,
+    certificateTemplate: training.certificateTemplate ?? null,
   };
   await setDoc(doc(fb.db, "trainings", training.id), payload, { merge: true });
 }

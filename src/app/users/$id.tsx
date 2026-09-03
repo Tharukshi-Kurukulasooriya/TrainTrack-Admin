@@ -10,7 +10,7 @@ import { Progress } from "@/components/ui/progress";
 import { useAppStore } from "@/hooks/useAppStore";
 import { evaluateAchievement } from "@/lib/achievements";
 import { AchievementIcon } from "@/lib/icons";
-import { formatDate, formatHours, formatRelative, initials } from "@/lib/utils";
+import { formatDate, formatHours, formatRelative, initials, resolveAvatarUrl } from "@/lib/utils";
 import { PageSkeleton } from "@/components/shared/page-skeleton";
 
 export const Route = createFileRoute("/users/$id")({
@@ -84,10 +84,10 @@ function UserDetailPage() {
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="p-6">
           <div className="flex flex-col items-center text-center">
-            <Avatar className="size-40">
+            <Avatar className="size-40 overflow-hidden border border-border/80 shadow-sm">
               {user.photoUrl ? (
                 <AvatarImage
-                  src={user.photoUrl.startsWith("/") ? user.photoUrl : `/${user.photoUrl}`}
+                  src={resolveAvatarUrl(user.photoUrl)}
                   alt={user.username || "User avatar"}
                   className="h-full w-full object-cover"
                 />
@@ -148,9 +148,7 @@ function UserDetailPage() {
                   <li
                     key={achievement.id}
                     className={`rounded-lg border p-3 transition-colors ${
-                      unlocked
-                        ? "border-accent/10 bg-accent/10"
-                        : "border-border/50 bg-secondary/60"
+                      unlocked ? "border-accent/10 bg-accent/6" : "border-border/50 bg-secondary/60"
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2">
@@ -206,7 +204,7 @@ function UserDetailPage() {
                   const percent =
                     p.totalSteps > 0 ? Math.round((p.currentStep / p.totalSteps) * 100) : 0;
                   return (
-                    <li key={p.trainingId} className="rounded-lg bg-secondary p-4">
+                    <li key={p.trainingId} className="rounded-lg bg-accent/6 p-4">
                       <div className="flex items-center justify-between gap-3">
                         <Link
                           to="/trainings/$id"

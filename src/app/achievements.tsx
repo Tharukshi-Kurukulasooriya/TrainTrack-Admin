@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Plus, Trophy } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/shared/page-header";
-import { ConfirmDelete } from "@/components/shared/confirm-delete";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { AchievementIcon } from "@/lib/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -147,7 +147,7 @@ function AchievementsPage() {
                 <Button
                   size="sm"
                   variant="ghost"
-                  className="text-destructive"
+                  className="text-destructive hover:bg-destructive-background/80"
                   onClick={() => setPending(achievement.id)}
                 >
                   Delete
@@ -290,7 +290,7 @@ function AchievementsPage() {
         </DialogContent>
       </Dialog>
 
-      <ConfirmDelete
+      <ConfirmDialog
         open={Boolean(pending)}
         onOpenChange={(open) => {
           if (!open) setPending(null);
