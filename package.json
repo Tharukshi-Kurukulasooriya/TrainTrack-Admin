@@ -41,6 +41,7 @@
     "cmdk": "^1.0.0",
     "date-fns": "^4.1.0",
     "firebase": "^11.4.0",
+    "lottie-react": "^3.1.1",
     "lucide-react": "^0.477.0",
     "react": "^19.0.0",
     "react-countup": "^6.5.3",

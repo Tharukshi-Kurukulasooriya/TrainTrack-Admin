@@ -46,6 +46,7 @@ function mapCertificate(value: unknown): CertificateTemplate | undefined {
     ),
     issuerName: asString(data.issuerName, "TrainTrack Academy"),
     signatureName: asString(data.signatureName, "Training Director"),
+    signatureType: data.signatureType === "text" ? "text" : "digital",
     issueDate: asString(data.issueDate, "September 03, 2026"),
     accentColor: asString(data.accentColor, "#1cadb3"),
     secondaryColor: asString(data.secondaryColor, "#fd8a13"),
@@ -59,7 +60,7 @@ function mapCertificate(value: unknown): CertificateTemplate | undefined {
     sealColor: asString(data.sealColor, "#c62828"),
     showLogo: data.showLogo !== false,
     showWatermark: data.showWatermark !== false,
-    signatureUrl: asString(data.signatureUrl),
+    signatureUrl: asString(data.signatureUrl, "/signatures/sign.png"),
   };
 }
 

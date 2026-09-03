@@ -27,6 +27,7 @@ export type CertificateTemplate = {
   completionText: string;
   issuerName: string;
   signatureName: string;
+  signatureType: "digital" | "text";
   issueDate: string;
   accentColor: string;
   secondaryColor: string;

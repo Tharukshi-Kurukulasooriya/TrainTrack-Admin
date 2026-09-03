@@ -22,9 +22,11 @@ import { CertificateEditor, CERTIFICATE_DEFAULTS } from "@/components/trainings/
 import { Stars } from "@/components/shared/stars";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { TRAINING_CATEGORIES, suggestTrainingId } from "@/lib/categories";
+import { LottieAnimations } from "@/lib/data/const";
 import { useAppStore } from "@/lib/data/store";
 import { formatRelative, initials } from "@/lib/utils";
 import type { ModuleRecord, TrainingRecord } from "@/lib/types";
+import { LottiePlayer } from "../ui/lottie-player";
 
 type ModuleDraft = ModuleRecord & { file?: File; preview?: string };
 
@@ -531,7 +533,8 @@ export function TrainingForm({
             <div className="space-y-3">
               {form.reviews.length === 0 ? (
                 <Card className="px-6 py-16 text-center text-sm text-muted-foreground">
-                  No learner reviews on this program yet.
+                  <LottiePlayer animationData={LottieAnimations.empty} className="mx-auto w-40" />
+                  No employee reviews on this program yet.
                 </Card>
               ) : (
                 form.reviews.map((review) => (

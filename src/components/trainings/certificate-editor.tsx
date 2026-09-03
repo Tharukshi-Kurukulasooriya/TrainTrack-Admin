@@ -1,14 +1,17 @@
 import { useRef } from "react";
 import {
-  Award,
   Check,
   Eye,
-  ImagePlus,
   Leaf,
+  PaintBucket,
   Palette,
   RotateCcw,
-  Sparkles,
+  Settings,
+  Signature,
+  Trash2,
   Upload,
+  User,
+  UserCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -31,6 +34,8 @@ const COLOR_PALETTES = [
   { name: "Rose", accent: "#b84b69", secondary: "#4b315e" },
 ];
 
+const DEFAULT_SIGNATURE_URL = "/signatures/sign.png";
+
 export const CERTIFICATE_DEFAULTS: CertificateTemplate = {
   layout: "classic",
   borderStyle: "double",
@@ -41,6 +46,7 @@ export const CERTIFICATE_DEFAULTS: CertificateTemplate = {
   completionText: "for successfully completing this training program",
   issuerName: "TrainTrack Academy",
   signatureName: "Training Director",
+  signatureType: "digital",
   issueDate: "September 03, 2026",
   accentColor: "#1cadb3",
   secondaryColor: "#fd8a13",
@@ -51,6 +57,7 @@ export const CERTIFICATE_DEFAULTS: CertificateTemplate = {
   sealColor: "#c62828",
   showLogo: true,
   showWatermark: true,
+  signatureUrl: DEFAULT_SIGNATURE_URL,
 };
 
 function CertificateSeal({
@@ -270,32 +277,33 @@ function CertificatePreview({
             </p>
           </div>
           <div className="flex w-full items-end justify-between gap-3 px-[4%] text-left text-[clamp(6px,1.1vw,12px)] text-[#59636c]">
-            <div className="min-w-0">
-              <div className="border-t border-[#9aa1a6] pt-1">
-                {template.signatureUrl ? (
-                  <img
-                    src={template.signatureUrl}
-                    alt="Digital signature"
-                    className="h-[clamp(14px,3vw,30px)] max-w-30 object-contain object-left"
-                  />
-                ) : (
-                  <p className="font-serif text-[clamp(8px,1.4vw,15px)] italic text-[#17212b]">
-                    {template.signatureName}
-                  </p>
-                )}
+            <div className="flex min-w-0 flex-col items-center">
+              {template.signatureType === "digital" && template.signatureUrl ? (
+                <img
+                  src={template.signatureUrl}
+                  alt="Digital signature"
+                  className="h-[clamp(18px,4vw,40px)] max-w-30 object-contain"
+                />
+              ) : (
+                <p className="font-serif text-[clamp(8px,1.4vw,15px)] italic text-[#17212b]">
+                  {template.signatureName}
+                </p>
+              )}
+
+              <div className="w-full border-t border-[#9aa1a6] pt-1 text-center">
+                <p>Authorized signature</p>
               </div>
-              <p>Authorized signature</p>
             </div>
+
             {template.showSeal && (
               <div className="flex size-[clamp(30px,7vw,72px)] shrink-0 items-center justify-center">
                 <CertificateSeal color={template.sealColor} style={template.sealStyle} />
               </div>
             )}
+
             <div className="text-right">
-              <p className="border-t border-[#9aa1a6] pt-1 font-medium text-[#17212b]">
-                {template.issueDate}
-              </p>
-              <p>Issue date</p>
+              <p className="font-medium text-[#17212b]">{template.issueDate}</p>
+              <p className="border-t border-[#9aa1a6] pt-1">Issue date</p>
             </div>
           </div>
           <p className="absolute bottom-[-1%] text-[clamp(5px,0.8vw,9px)] tracking-wide text-[#8a9196]">
@@ -357,77 +365,168 @@ export function CertificateEditor({
         </div>
 
         <div className="space-y-3 rounded-lg border border-border/70 bg-secondary/25 p-4">
-          <div className="flex items-center gap-2">
-            <div className="flex size-7 items-center justify-center rounded-md bg-accent/12 text-accent">
-              <Palette className="size-3.5" />
-            </div>
-            <div>
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2">
+              <Palette className="size-4 text-secondary-foreground" />
               <p className="text-sm font-semibold">Composition</p>
-              <p className="text-xs text-muted-foreground">
-                Choose the visual language for your award.
-              </p>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Choose the visual language for your award.
+            </p>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label>Sample template</Label>
+              <Select
+                value={value.layout}
+                onValueChange={(next) => setField("layout", next as CertificateTemplate["layout"])}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="classic">Classic Award</SelectItem>
+                  <SelectItem value="modern">Modern Edge</SelectItem>
+                  <SelectItem value="minimal">Minimal Signature</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Border treatment</Label>
+              <Select
+                value={value.borderStyle}
+                onValueChange={(next) =>
+                  setField("borderStyle", next as CertificateTemplate["borderStyle"])
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="double">Double line</SelectItem>
+                  <SelectItem value="frame">Single frame</SelectItem>
+                  <SelectItem value="none">Open edge</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
-          <Label>Sample template</Label>
+        </div>
+
+        <div className="space-y-3 rounded-lg border border-border/70 bg-secondary/25 p-4">
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2">
+              <Signature className="size-4 text-secondary-foreground" />
+              <p className="text-sm font-semibold">Signature</p>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Choose a digital signature image or enter a text signature.
+            </p>
+          </div>
           <Select
-            value={value.layout}
-            onValueChange={(next) => setField("layout", next as CertificateTemplate["layout"])}
+            value={value.signatureType}
+            onValueChange={(next) => {
+              const signatureType = next as CertificateTemplate["signatureType"];
+              onChange({
+                ...value,
+                signatureType,
+                signatureUrl:
+                  signatureType === "digital" && !value.signatureUrl
+                    ? DEFAULT_SIGNATURE_URL
+                    : value.signatureUrl,
+              });
+            }}
           >
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="classic">Classic Award</SelectItem>
-              <SelectItem value="modern">Modern Edge</SelectItem>
-              <SelectItem value="minimal">Minimal Signature</SelectItem>
+              <SelectItem value="digital">Digital signature</SelectItem>
+              <SelectItem value="text">Text signature</SelectItem>
             </SelectContent>
           </Select>
-        </div>
 
-        <div className="grid gap-4 rounded-lg border border-border/70 bg-secondary/25 p-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label>Border treatment</Label>
-            <Select
-              value={value.borderStyle}
-              onValueChange={(next) =>
-                setField("borderStyle", next as CertificateTemplate["borderStyle"])
-              }
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="double">Double line</SelectItem>
-                <SelectItem value="frame">Single frame</SelectItem>
-                <SelectItem value="none">Open edge</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="signatureUpload">Digital signature</Label>
-            <input
-              ref={signatureInputRef}
-              id="signatureUpload"
-              type="file"
-              accept="image/png,image/jpeg,image/webp"
-              className="sr-only"
-              onChange={(e) => uploadSignature(e.target.files?.[0])}
-            />
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full"
-              onClick={() => signatureInputRef.current?.click()}
-            >
-              <Upload className="size-4" />
-              {value.signatureUrl ? "Replace signature" : "Upload signature"}
-            </Button>
+          <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] sm:items-center">
+            <div className="flex h-22 min-w-0 items-center justify-center overflow-hidden rounded-md border border-border bg-secondary-foreground px-3">
+              {value.signatureType === "digital" && value.signatureUrl ? (
+                <img
+                  src={value.signatureUrl}
+                  alt="Selected digital signature preview"
+                  className="max-h-16 max-w-full object-contain"
+                />
+              ) : value.signatureType === "text" ? (
+                <p className="max-w-full truncate font-serif text-lg italic text-foreground">
+                  {value.signatureName || "Signature name"}
+                </p>
+              ) : (
+                <span className="text-xs text-secondary">No signature selected</span>
+              )}
+            </div>
+            <div className="min-w-0 space-y-2">
+              {value.signatureType === "digital" ? (
+                <>
+                  <input
+                    ref={signatureInputRef}
+                    id="signatureUpload"
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    className="sr-only"
+                    onChange={(e) => uploadSignature(e.target.files?.[0])}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full min-w-0 text-xs"
+                    onClick={() => signatureInputRef.current?.click()}
+                  >
+                    <Upload className="size-4" />
+                    {value.signatureUrl ? "Replace signature" : "Upload signature"}
+                  </Button>
+                  {value.signatureUrl ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full min-w-0 px-2 text-xs text-destructive hover:text-destructive"
+                      onClick={() => {
+                        setField("signatureUrl", "");
+                        if (signatureInputRef.current) signatureInputRef.current.value = "";
+                      }}
+                    >
+                      <Trash2 className="size-4" />
+                      Remove signature
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full min-w-0 px-2 text-xs"
+                      onClick={() => setField("signatureUrl", DEFAULT_SIGNATURE_URL)}
+                    >
+                      <RotateCcw className="size-4" />
+                      Use default signature
+                    </Button>
+                  )}
+                </>
+              ) : (
+                <div className="space-y-2">
+                  <Label htmlFor="signatureName">Signature name</Label>
+                  <Input
+                    id="signatureName"
+                    value={value.signatureName}
+                    onChange={(e) => setField("signatureName", e.target.value)}
+                    placeholder="Enter signature name"
+                  />
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
         <div className="space-y-3 rounded-lg border border-border/70 bg-secondary/25 p-4">
-          <div>
-            <p className="text-sm font-semibold">Brand direction</p>
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2">
+              <PaintBucket className="size-4 text-secondary-foreground" />
+              <p className="text-sm font-semibold">Brand direction</p>
+            </div>
             <p className="text-xs text-muted-foreground">
               Set the colors and supporting visual details.
             </p>
@@ -449,7 +548,7 @@ export function CertificateEditor({
                       secondaryColor: palette.secondary,
                     })
                   }
-                  className={`group flex items-center gap-2 rounded-full border px-2.5 py-1.5 text-xs transition-colors ${selected ? "border-accent bg-accent/10 text-foreground" : "border-border bg-card hover:border-accent/50"}`}
+                  className={`group flex items-center gap-2 rounded-full border px-2.5 py-1.5 text-xs transition-colors ${selected ? "border-accent/30 bg-accent/20 text-foreground" : "border-border bg-card hover:border-accent/50"}`}
                 >
                   <span className="flex -space-x-1">
                     <span
@@ -470,8 +569,11 @@ export function CertificateEditor({
         </div>
 
         <div className="space-y-3 rounded-lg border border-border/70 bg-secondary/25 p-4">
-          <div>
-            <p className="text-sm font-semibold">Certificate copy</p>
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2">
+              <UserCheck className="size-4 text-secondary-foreground" />
+              <p className="text-sm font-semibold">Certificate copy</p>
+            </div>
             <p className="text-xs text-muted-foreground">
               Personalize the message shown to every learner.
             </p>
@@ -546,14 +648,6 @@ export function CertificateEditor({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="signatureName">Signature name</Label>
-              <Input
-                id="signatureName"
-                value={value.signatureName}
-                onChange={(e) => setField("signatureName", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
               <Label htmlFor="issueDate">Issue date label</Label>
               <Input
                 id="issueDate"
@@ -608,8 +702,11 @@ export function CertificateEditor({
           </div>
         </div>
         <div className="space-y-3 rounded-lg border border-border/70 bg-secondary/25 p-4">
-          <div>
-            <p className="text-sm font-semibold">Trust signals</p>
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2">
+              <Settings className="size-4 text-secondary-foreground" />
+              <p className="text-sm font-semibold">Trust signals</p>
+            </div>
             <p className="text-xs text-muted-foreground">
               Give the certificate an official finish.
             </p>
@@ -639,17 +736,6 @@ export function CertificateEditor({
                 onCheckedChange={(checked) => setField("showLogo", checked)}
               />
             </div>
-            {value.signatureUrl ? (
-              <Button
-                type="button"
-                variant="ghost"
-                className="justify-start text-destructive"
-                onClick={() => setField("signatureUrl", "")}
-              >
-                <ImagePlus className="size-4" />
-                Remove digital signature
-              </Button>
-            ) : null}
             <div className="flex items-center justify-between rounded-md border border-accent/20 bg-accent/5 p-3">
               <div>
                 <Label htmlFor="showWatermark">Watermark</Label>
