@@ -240,7 +240,7 @@ export function TrainingForm({
               </Badge>
             </TabsTrigger>
           ) : null}
-          {mode === "edit" ? <TabsTrigger value="certificates">Certificates</TabsTrigger> : null}
+          <TabsTrigger value="certificates">Certificates</TabsTrigger>
         </TabsList>
 
         <TabsContent value="program">
@@ -576,17 +576,13 @@ export function TrainingForm({
           </TabsContent>
         ) : null}
 
-        {mode === "edit" ? (
-          <TabsContent value="certificates">
-            <CertificateEditor
-              value={form.certificateTemplate ?? { ...CERTIFICATE_DEFAULTS }}
-              trainingName={form.trainingName}
-              onChange={(certificateTemplate) =>
-                setField("certificateTemplate", certificateTemplate)
-              }
-            />
-          </TabsContent>
-        ) : null}
+        <TabsContent value="certificates">
+          <CertificateEditor
+            value={form.certificateTemplate ?? { ...CERTIFICATE_DEFAULTS }}
+            trainingName={form.trainingName}
+            onChange={(certificateTemplate) => setField("certificateTemplate", certificateTemplate)}
+          />
+        </TabsContent>
       </Tabs>
 
       <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
