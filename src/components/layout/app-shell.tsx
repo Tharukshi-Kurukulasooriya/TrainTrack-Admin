@@ -16,6 +16,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const hydrate = useAppStore((s) => s.hydrate);
   const hydrating = useAppStore((s) => s.hydrating);
   const ready = useAppStore((s) => s.ready);
+  const isModerator = useAuthStore((s) => s.currentAdmin?.role === "moderator");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
 
@@ -92,13 +93,15 @@ export function AppShell({ children }: { children: ReactNode }) {
                 ⌘ K
               </kbd>
             </button>
-            <Button asChild size="sm" className="shrink-0">
-              <Link to="/trainings/new">
-                <Plus className="size-4" />
-                <span className="hidden sm:inline">New training</span>
-                <span className="sm:hidden">New</span>
-              </Link>
-            </Button>
+            {!isModerator ? (
+              <Button asChild size="sm" className="shrink-0">
+                <Link to="/trainings/new">
+                  <Plus className="size-4" />
+                  <span className="hidden sm:inline">New training</span>
+                  <span className="sm:hidden">New</span>
+                </Link>
+              </Button>
+            ) : null}
           </header>
 
           <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">{children}</main>

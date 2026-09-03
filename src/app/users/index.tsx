@@ -14,6 +14,7 @@ import { useAppStore } from "@/hooks/useAppStore";
 import type { UserRecord } from "@/lib/types";
 import { formatHours, initials, resolveAvatarUrl } from "@/lib/utils";
 import { PageSkeleton } from "@/components/shared/page-skeleton";
+import { useAuthStore } from "@/lib/authStore";
 
 export const Route = createFileRoute("/users/")({
   component: UsersPage,
@@ -23,6 +24,7 @@ function UsersPage() {
   const ready = useAppStore((s) => s.ready);
   const users = useAppStore((s) => s.users);
   const removeUser = useAppStore((s) => s.removeUser);
+  const isModerator = useAuthStore((s) => s.currentAdmin?.role === "moderator");
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<UserRecord | null>(null);
@@ -48,15 +50,17 @@ function UsersPage() {
         title="Employees"
         description="Profiles, progress, watchlist, and activity across the training platform."
         actions={
-          <Button
-            onClick={() => {
-              setEditingUser(null);
-              setDialogOpen(true);
-            }}
-          >
-            <Plus className="size-4" />
-            Add learner
-          </Button>
+          !isModerator ? (
+            <Button
+              onClick={() => {
+                setEditingUser(null);
+                setDialogOpen(true);
+              }}
+            >
+              <Plus className="size-4" />
+              Add learner
+            </Button>
+          ) : null
         }
       />
 
@@ -123,24 +127,28 @@ function UsersPage() {
                     View detail
                   </Link>
                 </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => {
-                    setEditingUser(u);
-                    setDialogOpen(true);
-                  }}
-                >
-                  Edit
-                </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="text-destructive"
-                  onClick={() => setPendingDelete(u.uid)}
-                >
-                  <Trash2 className="size-4" />
-                </Button>
+                {!isModerator ? (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      setEditingUser(u);
+                      setDialogOpen(true);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                ) : null}
+                {!isModerator ? (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="text-destructive"
+                    onClick={() => setPendingDelete(u.uid)}
+                  >
+                    <Trash2 className="size-4" />
+                  </Button>
+                ) : null}
               </div>
             </Card>
           );

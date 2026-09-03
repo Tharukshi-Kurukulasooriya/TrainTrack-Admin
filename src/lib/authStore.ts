@@ -44,11 +44,7 @@ type AuthStore = {
     email: string,
     password: string,
   ) => { success: boolean; error?: string; admin?: AdminRecord };
-  createFirstSuperAdmin: (
-    name: string,
-    email: string,
-    password: string,
-  ) => Promise<AdminRecord>;
+  createFirstSuperAdmin: (name: string, email: string, password: string) => Promise<AdminRecord>;
   logout: () => void;
   upsertAdmin: (admin: AdminRecord) => Promise<void>;
   removeAdmin: (id: string) => Promise<void>;
@@ -94,9 +90,7 @@ export const useAuthStore = create<AuthStore>((set, get) => {
       const trimmedEmail = email.trim().toLowerCase();
       const trimmedPassword = password.trim();
 
-      const admin = get().admins.find(
-        (a) => a.email.toLowerCase() === trimmedEmail,
-      );
+      const admin = get().admins.find((a) => a.email.toLowerCase() === trimmedEmail);
 
       if (!admin) {
         return {
@@ -182,7 +176,17 @@ export const useAuthStore = create<AuthStore>((set, get) => {
     },
 
     upsertAdmin: async (admin: AdminRecord) => {
+      const actor = get().currentAdmin;
       const existing = get().admins.find((a) => a.id === admin.id);
+      if (!actor || actor.role === "moderator") {
+        throw new Error("This role has read-only access.");
+      }
+      if (
+        actor.role === "admin" &&
+        (admin.role === "super_admin" || existing?.role === "super_admin")
+      ) {
+        throw new Error("Administrators cannot create or edit super admins.");
+      }
       const nextAdmins = existing
         ? get().admins.map((a) => (a.id === admin.id ? admin : a))
         : [admin, ...get().admins];
@@ -203,6 +207,14 @@ export const useAuthStore = create<AuthStore>((set, get) => {
     },
 
     removeAdmin: async (id: string) => {
+      const actor = get().currentAdmin;
+      const target = get().admins.find((a) => a.id === id);
+      if (!actor || actor.role === "moderator") {
+        throw new Error("This role has read-only access.");
+      }
+      if (actor.role === "admin" && target?.role === "super_admin") {
+        throw new Error("Administrators cannot delete super admins.");
+      }
       const nextAdmins = get().admins.filter((a) => a.id !== id);
       const current = get().currentAdmin;
 

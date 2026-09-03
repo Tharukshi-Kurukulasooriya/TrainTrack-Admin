@@ -103,7 +103,7 @@ function LoginPage() {
         setSubmitting(false);
 
         if (res.success && res.admin) {
-          toast.success(`Welcome back, ${res.admin.name} (${roleLabel(res.admin.role)})!`);
+          toast.success(`Welcome back, ${res.admin.name}! (${roleLabel(res.admin.role)})`);
           void navigate({ to: "/" });
         } else {
           setErrorMsg(res.error || "Authentication failed. Check your email and password.");

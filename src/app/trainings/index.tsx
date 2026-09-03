@@ -19,6 +19,7 @@ import { useAppStore } from "@/hooks/useAppStore";
 import { cn, formatCurrency, formatNumber } from "@/lib/utils";
 import { PageSkeleton } from "@/components/shared/page-skeleton";
 import { CachedImage } from "@/components/shared/cached-image";
+import { useAuthStore } from "@/lib/authStore";
 
 export const Route = createFileRoute("/trainings/")({
   component: TrainingsPage,
@@ -27,6 +28,7 @@ export const Route = createFileRoute("/trainings/")({
 function TrainingsPage() {
   const ready = useAppStore((s) => s.ready);
   const trainings = useAppStore((s) => s.trainings);
+  const isModerator = useAuthStore((s) => s.currentAdmin?.role === "moderator");
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<string>("all");
   const [tier, setTier] = useState<string>("all");
@@ -57,12 +59,14 @@ function TrainingsPage() {
         title="Training programs"
         description="Every active training course in the catalog, with modules, reviews, and video resources."
         actions={
-          <Button asChild>
-            <Link to="/trainings/new">
-              <Plus className="size-4" />
-              New training
-            </Link>
-          </Button>
+          !isModerator ? (
+            <Button asChild>
+              <Link to="/trainings/new">
+                <Plus className="size-4" />
+                New training
+              </Link>
+            </Button>
+          ) : null
         }
       />
 

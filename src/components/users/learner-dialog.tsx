@@ -33,6 +33,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAppStore } from "@/lib/data/store";
+import { useAuthStore } from "@/lib/authStore";
 import { INBUILT_AVATARS } from "@/lib/services/adminService";
 import type { TrainingProgress, UserRecord } from "@/lib/types";
 import { initials, resolveAvatarUrl, slugify } from "@/lib/utils";
@@ -66,6 +67,7 @@ export function LearnerDialog({
 }) {
   const upsertUser = useAppStore((s) => s.upsertUser);
   const trainings = useAppStore((s) => s.trainings);
+  const isAdministrator = useAuthStore((s) => s.currentAdmin?.role === "admin");
 
   const [form, setForm] = useState<UserRecord>(initial ? { ...initial } : emptyUser());
   const [timeoutPreset, setTimeoutPreset] = useState<string>(() => {
@@ -203,6 +205,10 @@ export function LearnerDialog({
       : `usr-${slugify(form.username).toLowerCase() || crypto.randomUUID().slice(0, 8)}`;
     await upsertUser({
       ...form,
+      purchasedTrainings: isAdministrator
+        ? (initial?.purchasedTrainings ?? [])
+        : form.purchasedTrainings,
+      trainingProgress: isAdministrator ? (initial?.trainingProgress ?? {}) : form.trainingProgress,
       uid,
       username: form.username.trim(),
       email: form.email.trim(),
@@ -530,7 +536,10 @@ export function LearnerDialog({
             </div>
 
             {/* purchased trainings management */}
-            <div className="space-y-3 rounded-lg border border-border p-4 bg-accent/4">
+            <fieldset
+              disabled={isAdministrator}
+              className="space-y-3 rounded-lg border border-border p-4 bg-accent/4"
+            >
               <div className="flex items-center gap-2">
                 <ShoppingBag className="size-4 text-accent" />
                 <Label className="font-semibold">
@@ -578,115 +587,119 @@ export function LearnerDialog({
                   })
                 )}
               </div>
-            </div>
+            </fieldset>
           </TabsContent>
 
           {/* tab 4: training progress */}
           <TabsContent value="progress" className="space-y-4 pt-4">
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label className="font-semibold flex items-center gap-2">
-                  Program Completion & Module Progress
-                </Label>
+            <fieldset disabled={isAdministrator} className="space-y-4">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label className="font-semibold flex items-center gap-2">
+                    Program Completion & Module Progress
+                  </Label>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Manage completed status and step counters for all enrolled training programs.
+                </p>
               </div>
-              <p className="text-xs text-muted-foreground">
-                Manage completed status and step counters for all enrolled training programs.
-              </p>
-            </div>
 
-            <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
-              {trainings.length === 0 ? (
-                <p className="text-xs text-muted-foreground">No catalog programs available.</p>
-              ) : (
-                trainings.map((t) => {
-                  const prog = form.trainingProgress[t.id];
-                  const isCompleted = prog?.completed ?? false;
-                  const totalSteps = t.modules.length || 5;
+              <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
+                {trainings.length === 0 ? (
+                  <p className="text-xs text-muted-foreground">No catalog programs available.</p>
+                ) : (
+                  trainings.map((t) => {
+                    const prog = form.trainingProgress[t.id];
+                    const isCompleted = prog?.completed ?? false;
+                    const totalSteps = t.modules.length || 5;
 
-                  return (
-                    <div
-                      key={t.id}
-                      className="rounded-lg border border-border/80 p-3.5 bg-accent/4 space-y-3"
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <div>
-                          <p className="text-sm font-semibold">{t.trainingName}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {prog
-                              ? `Step ${prog.currentStep} of ${prog.totalSteps} · ${prog.minutesSpent} mins spent`
-                              : "Not started yet"}
-                          </p>
+                    return (
+                      <div
+                        key={t.id}
+                        className="rounded-lg border border-border/80 p-3.5 bg-accent/4 space-y-3"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <div>
+                            <p className="text-sm font-semibold">{t.trainingName}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {prog
+                                ? `Step ${prog.currentStep} of ${prog.totalSteps} · ${prog.minutesSpent} mins spent`
+                                : "Not started yet"}
+                            </p>
+                          </div>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant={isCompleted ? "outline" : "default"}
+                            onClick={() =>
+                              toggleTrainingCompleted(t.id, t.trainingName, totalSteps)
+                            }
+                            className="text-xs h-8"
+                          >
+                            {isCompleted ? "Mark Incomplete" : "Mark Complete"}
+                          </Button>
                         </div>
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant={isCompleted ? "outline" : "default"}
-                          onClick={() => toggleTrainingCompleted(t.id, t.trainingName, totalSteps)}
-                          className="text-xs h-8"
-                        >
-                          {isCompleted ? "Mark Incomplete" : "Mark Complete"}
-                        </Button>
+
+                        {prog ? (
+                          <div className="grid grid-cols-2 gap-2 pt-2 border-t border-border/60">
+                            <div className="space-y-1">
+                              <Label className="text-[11px] text-muted-foreground">
+                                Completed Step
+                              </Label>
+                              <Input
+                                type="number"
+                                min={0}
+                                max={prog.totalSteps}
+                                value={prog.currentStep}
+                                onChange={(e) => {
+                                  const step = Number(e.target.value) || 0;
+                                  setForm((prev) => ({
+                                    ...prev,
+                                    trainingProgress: {
+                                      ...prev.trainingProgress,
+                                      [t.id]: {
+                                        ...prog,
+                                        currentStep: step,
+                                        completed: step >= prog.totalSteps,
+                                      },
+                                    },
+                                  }));
+                                }}
+                                className="h-8 text-xs"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <Label className="text-[11px] text-muted-foreground">
+                                Minutes Spent
+                              </Label>
+                              <Input
+                                type="number"
+                                min={0}
+                                value={prog.minutesSpent}
+                                onChange={(e) => {
+                                  const mins = Number(e.target.value) || 0;
+                                  setForm((prev) => ({
+                                    ...prev,
+                                    trainingProgress: {
+                                      ...prev.trainingProgress,
+                                      [t.id]: {
+                                        ...prog,
+                                        minutesSpent: mins,
+                                      },
+                                    },
+                                  }));
+                                }}
+                                className="h-8 text-xs"
+                              />
+                            </div>
+                          </div>
+                        ) : null}
                       </div>
-
-                      {prog ? (
-                        <div className="grid grid-cols-2 gap-2 pt-2 border-t border-border/60">
-                          <div className="space-y-1">
-                            <Label className="text-[11px] text-muted-foreground">
-                              Completed Step
-                            </Label>
-                            <Input
-                              type="number"
-                              min={0}
-                              max={prog.totalSteps}
-                              value={prog.currentStep}
-                              onChange={(e) => {
-                                const step = Number(e.target.value) || 0;
-                                setForm((prev) => ({
-                                  ...prev,
-                                  trainingProgress: {
-                                    ...prev.trainingProgress,
-                                    [t.id]: {
-                                      ...prog,
-                                      currentStep: step,
-                                      completed: step >= prog.totalSteps,
-                                    },
-                                  },
-                                }));
-                              }}
-                              className="h-8 text-xs"
-                            />
-                          </div>
-                          <div className="space-y-1">
-                            <Label className="text-[11px] text-muted-foreground">
-                              Minutes Spent
-                            </Label>
-                            <Input
-                              type="number"
-                              min={0}
-                              value={prog.minutesSpent}
-                              onChange={(e) => {
-                                const mins = Number(e.target.value) || 0;
-                                setForm((prev) => ({
-                                  ...prev,
-                                  trainingProgress: {
-                                    ...prev.trainingProgress,
-                                    [t.id]: {
-                                      ...prog,
-                                      minutesSpent: mins,
-                                    },
-                                  },
-                                }));
-                              }}
-                              className="h-8 text-xs"
-                            />
-                          </div>
-                        </div>
-                      ) : null}
-                    </div>
-                  );
-                })
-              )}
-            </div>
+                    );
+                  })
+                )}
+              </div>
+            </fieldset>
           </TabsContent>
         </Tabs>
 

@@ -37,6 +37,7 @@ import { TRAINING_CATEGORIES } from "@/lib/categories";
 import { useAppStore } from "@/hooks/useAppStore";
 import type { AchievementRecord } from "@/lib/types";
 import { PageSkeleton } from "@/components/shared/page-skeleton";
+import { useAuthStore } from "@/lib/authStore";
 
 export const Route = createFileRoute("/achievements")({
   component: AchievementsPage,
@@ -61,6 +62,7 @@ function AchievementsPage() {
   const trainings = useAppStore((s) => s.trainings);
   const upsertAchievement = useAppStore((s) => s.upsertAchievement);
   const removeAchievement = useAppStore((s) => s.removeAchievement);
+  const isModerator = useAuthStore((s) => s.currentAdmin?.role === "moderator");
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<AchievementRecord>(emptyForm);
   const [pending, setPending] = useState<string | null>(null);
@@ -90,15 +92,17 @@ function AchievementsPage() {
         title="Achievements"
         description="Rules such as complete 3 trainings, train 3 hours in a day, or buy 3 premium programs. Unlock counts are computed from employee progress."
         actions={
-          <Button
-            onClick={() => {
-              setForm(emptyForm());
-              setOpen(true);
-            }}
-          >
-            <Plus className="size-4" />
-            New achievement
-          </Button>
+          !isModerator ? (
+            <Button
+              onClick={() => {
+                setForm(emptyForm());
+                setOpen(true);
+              }}
+            >
+              <Plus className="size-4" />
+              New achievement
+            </Button>
+          ) : null
         }
       />
 
@@ -133,26 +137,28 @@ function AchievementsPage() {
               <p className="mt-2 text-sm tabular-nums">
                 {unlocked} of {users.length} employees unlocked
               </p>
-              <div className="mt-4 flex gap-1">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => {
-                    setForm(achievement);
-                    setOpen(true);
-                  }}
-                >
-                  Edit
-                </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="text-destructive hover:bg-destructive-background/80"
-                  onClick={() => setPending(achievement.id)}
-                >
-                  Delete
-                </Button>
-              </div>
+              {!isModerator ? (
+                <div className="mt-4 flex gap-1">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      setForm(achievement);
+                      setOpen(true);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="text-destructive hover:bg-destructive-background/80"
+                    onClick={() => setPending(achievement.id)}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              ) : null}
             </Card>
           );
         })}

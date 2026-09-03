@@ -52,6 +52,7 @@ function OverviewPage() {
   const users = useAppStore((s) => s.users);
   const achievements = useAppStore((s) => s.achievements);
   const currentAdmin = useAuthStore((s) => s.currentAdmin);
+  const isModerator = currentAdmin?.role === "moderator";
   const [now, setNow] = useState<Date | null>(null);
 
   useEffect(() => {
@@ -108,12 +109,14 @@ function OverviewPage() {
           <Button asChild variant="outline">
             <Link to="/users">Employees</Link>
           </Button>
-          <Button asChild>
-            <Link to="/trainings/new">
-              <Plus className="size-4" />
-              New training
-            </Link>
-          </Button>
+          {!isModerator ? (
+            <Button asChild>
+              <Link to="/trainings/new">
+                <Plus className="size-4" />
+                New training
+              </Link>
+            </Button>
+          ) : null}
         </div>
       </div>
 

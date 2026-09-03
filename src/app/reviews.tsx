@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { useAllReviews, useAppStore } from "@/hooks/useAppStore";
 import { formatRelative, initials } from "@/lib/utils";
 import { PageSkeleton } from "@/components/shared/page-skeleton";
+import { useAuthStore } from "@/lib/authStore";
 
 export const Route = createFileRoute("/reviews")({
   component: ReviewsPage,
@@ -21,6 +22,7 @@ function ReviewsPage() {
   const ready = useAppStore((s) => s.ready);
   const reviews = useAllReviews();
   const removeReview = useAppStore((s) => s.removeReview);
+  const isModerator = useAuthStore((s) => s.currentAdmin?.role === "moderator");
   const [search, setSearch] = useState("");
   const [pending, setPending] = useState<{
     trainingId: string;
@@ -92,20 +94,22 @@ function ReviewsPage() {
                 </p>
               </div>
             </div>
-            <Button
-              size="sm"
-              variant="ghost"
-              className="self-start text-destructive"
-              onClick={() =>
-                setPending({
-                  trainingId: review.trainingId,
-                  reviewId: review.id,
-                })
-              }
-            >
-              <Trash2 className="size-3.5" />
-              Remove
-            </Button>
+            {!isModerator ? (
+              <Button
+                size="sm"
+                variant="ghost"
+                className="self-start text-destructive"
+                onClick={() =>
+                  setPending({
+                    trainingId: review.trainingId,
+                    reviewId: review.id,
+                  })
+                }
+              >
+                <Trash2 className="size-3.5" />
+                Remove
+              </Button>
+            ) : null}
           </Card>
         ))}
 

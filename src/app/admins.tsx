@@ -52,6 +52,7 @@ import { useAuthStore } from "@/lib/authStore";
 import { INBUILT_AVATARS, roleDescription, roleLabel } from "@/lib/services/adminService";
 import type { AdminRecord, AdminRole } from "@/lib/types";
 import { formatDate, formatRelative, initials } from "@/lib/utils";
+import Counter from "@/components/shared/counter";
 
 export const Route = createFileRoute("/admins")({
   component: AdminsPage,
@@ -81,6 +82,8 @@ function AdminsPage() {
   const [saving, setSaving] = useState(false);
 
   const isSuperAdmin = currentAdmin?.role === "super_admin";
+  const canManageAdmins = isSuperAdmin || currentAdmin?.role === "admin";
+  const isModerator = currentAdmin?.role === "moderator";
 
   const filteredAdmins = useMemo(() => {
     return admins.filter((a) => {
@@ -104,13 +107,17 @@ function AdminsPage() {
     setNewPassword("");
     setConfirmPassword("");
     setChangePassword(false);
-    setRole("admin");
+    setRole(isSuperAdmin ? "super_admin" : "admin");
     setAvatarUrl("/assets/avatars/default.png");
     setIsActive(true);
     setDialogOpen(true);
   };
 
   const openEditDialog = (admin: AdminRecord) => {
+    if (!isSuperAdmin && admin.role === "super_admin") {
+      toast.error("Administrators cannot edit super admins.");
+      return;
+    }
     setEditingAdmin(admin);
     setName(admin.name);
     setEmail(admin.email);
@@ -205,6 +212,10 @@ function AdminsPage() {
   };
 
   const handleToggleActive = async (admin: AdminRecord) => {
+    if (!isSuperAdmin && admin.role === "super_admin") {
+      toast.error("Administrators cannot edit super admins.");
+      return;
+    }
     if (admin.id === currentAdmin?.id) {
       toast.error("You cannot deactivate your own logged-in account.");
       return;
@@ -219,6 +230,10 @@ function AdminsPage() {
   };
 
   const handleDelete = async (admin: AdminRecord) => {
+    if (!isSuperAdmin && admin.role === "super_admin") {
+      toast.error("Administrators cannot delete super admins.");
+      return;
+    }
     if (admin.id === currentAdmin?.id) {
       toast.error("You cannot delete your own logged-in account.");
       return;
@@ -229,7 +244,7 @@ function AdminsPage() {
     }
   };
 
-  if (!isSuperAdmin) {
+  if (!canManageAdmins && !isModerator) {
     return (
       <Card className="flex flex-col items-center justify-center p-12 text-center my-8">
         <ShieldAlert className="size-12 text-destructive mb-3" />
@@ -250,10 +265,12 @@ function AdminsPage() {
         title="Admin Accounts & Roles"
         description="Manage administrator accounts, granular role permissions, and security access."
         actions={
-          <Button onClick={openCreateDialog} className="gap-2">
-            <UserPlus className="size-4" />
-            New Admin Account
-          </Button>
+          canManageAdmins ? (
+            <Button onClick={openCreateDialog} className="gap-2">
+              <UserPlus className="size-4" />
+              New Admin Account
+            </Button>
+          ) : null
         }
       />
 
@@ -264,7 +281,9 @@ function AdminsPage() {
             <UserCog className="size-5" />
           </div>
           <div>
-            <p className="text-2xl font-bold font-mono">{admins.length}</p>
+            <p className="text-2xl font-bold font-mono">
+              <Counter value={admins.length} />
+            </p>
             <p className="text-xs text-muted-foreground">Total Admin Accounts</p>
           </div>
         </Card>
@@ -274,7 +293,9 @@ function AdminsPage() {
             <ShieldCheck className="size-5" />
           </div>
           <div>
-            <p className="text-2xl font-bold font-mono">{superAdminsCount}</p>
+            <p className="text-2xl font-bold font-mono">
+              <Counter value={superAdminsCount} />
+            </p>
             <p className="text-xs text-muted-foreground">Super Administrators</p>
           </div>
         </Card>
@@ -284,7 +305,9 @@ function AdminsPage() {
             <UserCheck className="size-5" />
           </div>
           <div>
-            <p className="text-2xl font-bold font-mono">{activeCount}</p>
+            <p className="text-2xl font-bold font-mono">
+              <Counter value={activeCount} />
+            </p>
             <p className="text-xs text-muted-foreground">Active Accounts</p>
           </div>
         </Card>
@@ -294,7 +317,9 @@ function AdminsPage() {
             <Activity className="size-5" />
           </div>
           <div>
-            <p className="text-2xl font-bold font-mono">{recentlyActiveCount}</p>
+            <p className="text-2xl font-bold font-mono">
+              <Counter value={recentlyActiveCount} />
+            </p>
             <p className="text-xs text-muted-foreground">Recently Active Sessions</p>
           </div>
         </Card>
@@ -367,44 +392,46 @@ function AdminsPage() {
                     </div>
                   </div>
 
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="size-8 shrink-0">
-                        <MoreVertical className="size-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => openEditDialog(admin)}>
-                        <UserCog className="size-4 mr-2" />
-                        Edit Profile & Role
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => handleToggleActive(admin)}
-                        disabled={isCurrent}
-                      >
-                        {admin.isActive ? (
-                          <>
-                            <XCircle className="size-4 mr-2 text-amber-500" />
-                            Deactivate Account
-                          </>
-                        ) : (
-                          <>
-                            <CheckCircle2 className="size-4 mr-2 text-emerald-500" />
-                            Activate Account
-                          </>
-                        )}
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        onClick={() => handleDelete(admin)}
-                        disabled={isCurrent}
-                        variant="destructive"
-                      >
-                        <Trash2 className="size-4 mr-2" />
-                        Delete Account
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  {canManageAdmins && (isSuperAdmin || admin.role !== "super_admin") ? (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="size-8 shrink-0">
+                          <MoreVertical className="size-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => openEditDialog(admin)}>
+                          <UserCog className="size-4 mr-2" />
+                          Edit Profile & Role
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => handleToggleActive(admin)}
+                          disabled={isCurrent}
+                        >
+                          {admin.isActive ? (
+                            <>
+                              <XCircle className="size-4 mr-2 text-amber-500" />
+                              Deactivate Account
+                            </>
+                          ) : (
+                            <>
+                              <CheckCircle2 className="size-4 mr-2 text-emerald-500" />
+                              Activate Account
+                            </>
+                          )}
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => handleDelete(admin)}
+                          disabled={isCurrent}
+                          variant="destructive"
+                        >
+                          <Trash2 className="size-4 mr-2" />
+                          Delete Account
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  ) : null}
                 </div>
 
                 <div className="mt-4 flex flex-wrap items-center gap-2">
@@ -651,14 +678,16 @@ function AdminsPage() {
                     <SelectValue placeholder="Select Role">{roleLabel(role)}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="super_admin" textValue="Super Admin">
-                      <div className="flex flex-col py-0.5">
-                        <span className="font-semibold text-foreground">Super Admin</span>
-                        <span className="text-[11px] text-muted-foreground">
-                          Full system access & admin account management
-                        </span>
-                      </div>
-                    </SelectItem>
+                    {isSuperAdmin ? (
+                      <SelectItem value="super_admin" textValue="Super Admin">
+                        <div className="flex flex-col py-0.5">
+                          <span className="font-semibold text-foreground">Super Admin</span>
+                          <span className="text-[11px] text-muted-foreground">
+                            Full system access & admin account management
+                          </span>
+                        </div>
+                      </SelectItem>
+                    ) : null}
                     <SelectItem value="admin" textValue="Administrator">
                       <div className="flex flex-col py-0.5">
                         <span className="font-semibold text-foreground">Administrator</span>

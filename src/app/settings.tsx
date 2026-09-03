@@ -17,6 +17,7 @@ import { Progress } from "@/components/ui/progress";
 import { THEME_COLORS, ThemeColor, ThemeMode, useThemeStore } from "@/lib/themeStore";
 import { cn } from "@/lib/utils";
 import { PageHeader } from "@/components/shared/page-header";
+import { useAuthStore } from "@/lib/authStore";
 
 export const Route = createFileRoute("/settings")({
   component: SettingsPage,
@@ -27,6 +28,7 @@ function SettingsPage() {
   const themeColor = useThemeStore((s) => s.themeColor);
   const setMode = useThemeStore((s) => s.setMode);
   const setThemeColor = useThemeStore((s) => s.setThemeColor);
+  const isModerator = useAuthStore((s) => s.currentAdmin?.role === "moderator");
 
   const handleModeChange = (newMode: ThemeMode) => {
     setMode(newMode);
@@ -53,7 +55,7 @@ function SettingsPage() {
         description="Customize display mode, choose your preferred theme accent color, and manage interface
             behavior."
         actions={
-          <Button variant="outline" size="sm" onClick={handleResetDefaults}>
+          <Button variant="outline" size="sm" onClick={handleResetDefaults} disabled={isModerator}>
             <RotateCcw className="size-3.5" />
             Reset Defaults
           </Button>
@@ -86,6 +88,7 @@ function SettingsPage() {
               {/* dark mode card */}
               <button
                 type="button"
+                disabled={isModerator}
                 onClick={() => handleModeChange("dark")}
                 className={cn(
                   "relative flex flex-col justify-between rounded-lg border p-4 text-left transition-all duration-200 cursor-pointer overflow-visible",
@@ -127,6 +130,7 @@ function SettingsPage() {
               {/* light mode card */}
               <button
                 type="button"
+                disabled={isModerator}
                 onClick={() => handleModeChange("light")}
                 className={cn(
                   "relative flex flex-col justify-between rounded-lg border p-4 text-left transition-all duration-200 cursor-pointer overflow-visible",
@@ -189,6 +193,7 @@ function SettingsPage() {
                   <button
                     key={color.id}
                     type="button"
+                    disabled={isModerator}
                     onClick={() => handleThemeColorChange(color.id)}
                     className={cn(
                       "group flex items-center gap-3 rounded-lg border p-3.5 text-left transition-all duration-200 cursor-pointer",

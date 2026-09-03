@@ -26,6 +26,13 @@ import type {
 import { preloadImages } from "@/lib/imageCache";
 import { resolveAvatarUrl } from "@/lib/utils";
 import { INBUILT_AVATARS } from "@/lib/services/adminService";
+import { useAuthStore } from "@/lib/authStore";
+
+function assertCanMutate() {
+  if (useAuthStore.getState().currentAdmin?.role === "moderator") {
+    throw new Error("Moderators have read-only access.");
+  }
+}
 
 type AppStore = {
   ready: boolean;
@@ -122,14 +129,22 @@ export const useAppStore = create<AppStore>((set, get) => {
     },
 
     upsertTraining: async (training) => {
-      const next = [training, ...get().trainings.filter((t) => t.id !== training.id)].sort(
+      assertCanMutate();
+      const actor = useAuthStore.getState().currentAdmin;
+      const existing = get().trainings.find((t) => t.id === training.id);
+      const protectedTraining =
+        actor?.role === "admin"
+          ? { ...training, certificateTemplate: existing?.certificateTemplate }
+          : training;
+      const next = [protectedTraining, ...get().trainings.filter((t) => t.id !== training.id)].sort(
         (a, b) => new Date(b.trainingAddedDate).getTime() - new Date(a.trainingAddedDate).getTime(),
       );
       set({ trainings: next });
-      await saveTraining(training);
+      await saveTraining(protectedTraining);
     },
 
     removeTraining: async (id) => {
+      assertCanMutate();
       const existing = get().trainings.find((t) => t.id === id);
       set({ trainings: get().trainings.filter((t) => t.id !== id) });
       if (existing) {
@@ -138,6 +153,7 @@ export const useAppStore = create<AppStore>((set, get) => {
     },
 
     upsertModule: async (trainingId, module) => {
+      assertCanMutate();
       const trainings = get().trainings.map((t) =>
         t.id === trainingId
           ? {
@@ -151,6 +167,7 @@ export const useAppStore = create<AppStore>((set, get) => {
     },
 
     removeModule: async (trainingId, moduleId) => {
+      assertCanMutate();
       const current = get().trainings.find((t) => t.id === trainingId);
       const module = current?.modules.find((m) => m.id === moduleId);
       const trainings = get().trainings.map((t) =>
@@ -163,6 +180,7 @@ export const useAppStore = create<AppStore>((set, get) => {
     },
 
     removeReview: async (trainingId, reviewId) => {
+      assertCanMutate();
       const trainings = get().trainings.map((t) => {
         if (t.id !== trainingId) return t;
         const reviews = t.reviews.filter((r) => r.id !== reviewId);
@@ -185,18 +203,21 @@ export const useAppStore = create<AppStore>((set, get) => {
     },
 
     upsertUser: async (user) => {
+      assertCanMutate();
       const users = [user, ...get().users.filter((u) => u.uid !== user.uid)];
       set({ users });
       await saveUser(user);
     },
 
     removeUser: async (uid) => {
+      assertCanMutate();
       const users = get().users.filter((u) => u.uid !== uid);
       set({ users });
       await deleteUser(uid);
     },
 
     upsertAchievement: async (achievement) => {
+      assertCanMutate();
       const achievements = [
         achievement,
         ...get().achievements.filter((a) => a.id !== achievement.id),
@@ -206,12 +227,14 @@ export const useAppStore = create<AppStore>((set, get) => {
     },
 
     removeAchievement: async (id) => {
+      assertCanMutate();
       const achievements = get().achievements.filter((a) => a.id !== id);
       set({ achievements });
       await deleteAchievement(id);
     },
 
     uploadImage: async (trainingId, file) => {
+      assertCanMutate();
       try {
         const result = await uploadTrainingImage(trainingId, file);
         return { url: result.url, path: result.path };
@@ -222,6 +245,7 @@ export const useAppStore = create<AppStore>((set, get) => {
     },
 
     uploadVideo: async (trainingId, moduleId, file) => {
+      assertCanMutate();
       try {
         const result = await uploadModuleVideo(trainingId, moduleId, file);
         return { url: result.url, path: result.path };
